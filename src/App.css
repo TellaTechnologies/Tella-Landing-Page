@@ -1,0 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+/* Global CSS */
+* {
+  font-family: 'Roboto', sans-serif;
+}
