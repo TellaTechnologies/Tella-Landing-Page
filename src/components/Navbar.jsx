@@ -15,12 +15,12 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
-          <li className="hover:text-blue-500 cursor-pointer"><a href="#home">Home</a></li>
-          <li className="hover:text-blue-500 cursor-pointer"><a href="#product">Product</a></li>
-          <li className="hover:text-blue-500 cursor-pointer"><a href="#about">About Us</a></li>
-          <li className="hover:text-blue-500 cursor-pointer"><a href="#faq">FAQ</a></li>
-          <li className="hover:text-blue-500 cursor-pointer"><a href="#contact">Contact</a></li>
-          <li className="hover:text-blue-500 cursor-pointer">Blog</li>
+        <li><a href="#home" className="hover:text-blue-500">Home</a></li>
+            <li><a href="#product" className="hover:text-blue-500">Product</a></li>
+            <li><a href="#about" className="hover:text-blue-500">About Us</a></li>
+            <li><a href="#faq" className="hover:text-blue-500">FAQ</a></li>
+            <li><a href="#contact" className="hover:text-blue-500">Contact</a></li>
+            <li className="hover:text-blue-500 cursor-pointer">Blog</li>
         </ul>
 
         {/* Action Buttons */}
@@ -68,12 +68,12 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-md">
           <ul className="flex flex-col items-center space-y-4 py-4 text-gray-700 font-medium">
-            <li className="hover:text-blue-500 cursor-pointer">Home</li>
-            <li className="hover:text-blue-500 cursor-pointer">Product</li>
-            <li className="hover:text-blue-500 cursor-pointer">About Us</li>
-            <li className="hover:text-blue-500 cursor-pointer">FAQ</li>
-            <li className="hover:text-blue-500 cursor-pointer">Contact</li>
-            <li className="hover:text-blue-500 cursor-pointer">Blog</li>
+          <li><a href="#home" className="hover:text-blue-500">Home</a></li>
+            <li><a href="#product" className="hover:text-blue-500">Product</a></li>
+            <li><a href="#about" className="hover:text-blue-500">About Us</a></li>
+            <li><a href="#faq" className="hover:text-blue-500">FAQ</a></li>
+            <li><a href="#contact" className="hover:text-blue-500">Contact</a></li>
+            <li className="hover:text-blue-500 cursor-pointer">Blog</li> 
           </ul>
           <div className="flex flex-col items-center space-y-4 pb-4">
             <button className="px-4 py-2 border border-[#2097CF] text-[#282828] font-bold rounded hover:bg-blue-200 w-32">

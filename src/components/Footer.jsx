@@ -47,7 +47,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="flex justify-between items-center mt-8">
-          <p className="text-sm">© 2024 Tella Technologies Limited</p>
+          <p className="text-sm">© 2025 Tella Technologies Limited</p>
           <a
             href="#top"
             className="text-sm font-medium underline hover:text-blue-300"
