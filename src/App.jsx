@@ -6,6 +6,7 @@ import AboutUsSection from "./components/AboutUsSection ";
 import FAQSection from "./components/FAQSection";
 import ContactUsSection from "./components/ContactUsSection";
 import Footer from "./components/Footer";
+import CustomersTransactions from "./Pages/admin/Customers/transactions";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 import "./App.css"
@@ -17,7 +18,8 @@ function App() {
        <Router>
           <Routes>
             <Route path="/" element={<Home/>}/>
-            <Route path="/dashboard/transactions" element={<Transactions/>}/>
+            <Route path="/dashboard/agent/transactions" element={<Transactions/>}/>
+            <Route path="/dashboard/customers/transactions" element={<CustomersTransactions/>}/>
           </Routes>
         </Router>
       {/* <Navbar /> */}
