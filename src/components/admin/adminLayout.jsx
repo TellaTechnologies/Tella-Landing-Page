@@ -26,7 +26,7 @@ export default function AdminLayout({ children, title }) {
         nav ? 
         <div>
           <Sidebar className=""/>
-          <div className="absolute icons right-[120px] z-10">
+          <div className="absolute md:hidden  icons right-[120px] z-10">
             <Link className="text-blue-300 underline" onClick={()=> setNavDisplay(false)}>close</Link>
           </div>
         </div>
