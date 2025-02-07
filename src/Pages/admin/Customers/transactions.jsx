@@ -26,7 +26,7 @@ const Transactions = (props) => {
                 <div>
                     <p className="m-0 md:text-[22px] font-medium">Overview</p>
                 </div>
-                    <div className="lg:flex lg:flex-wrap mx-auto lg:mx-0 items-center justify-around">
+                    <div className="flex flex-wrap mx-auto lg:mx-0 items-center justify-around">
                         <div className='bg-white md:w-[258px] w-[250px] md:h-[138px] md:p-4  border border-none rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-4'>
                             <div>
                                 <div className='flex  justify-between md:gap-24 gap-20 lg:gap-20'>

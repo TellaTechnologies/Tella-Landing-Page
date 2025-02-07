@@ -13,6 +13,7 @@ import "./App.css"
 import Home from "./Pages/home";
 import Transactions from "./Pages/admin/Agents/transactions";
 import ListOfAgents from "./Pages/admin/Agents/ListOfAgents";
+import ListOfCustomers from './Pages/admin/Customers/ListOfCustomers'
 function App() {
   return (
     <div className="font-sans ">      
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<Home/>}/>
             <Route path="/dashboard/agent/transactions" element={<Transactions/>}/>
             <Route path="/dashboard/agent/list" element={<ListOfAgents/>}/>
+            <Route path="/dashboard/customers/list" element={<ListOfCustomers/>}/>
             <Route path="/dashboard/customers/transactions" element={<CustomersTransactions/>}/>
           </Routes>
         </Router>

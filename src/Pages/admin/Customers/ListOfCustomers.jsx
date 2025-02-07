@@ -7,15 +7,14 @@ import FrameTwo from '../../../assets/Frame2.svg'
 import FrameThree from '../../../assets/Frame3.svg'
 import FrameFive from '../../../assets/Frame55.svg'
 import MagnifyingGlass from '../../../assets/coolicon.svg'
-import { ArrowDownToLine, ArrowUp} from 'lucide-react';
+import { ArrowDownToLine, ArrowUp } from 'lucide-react';
 import { Button } from "@/components/ui/button"
-
-function ListOfAgents(props) {
+function ListOfCustomers(props) {
     const [date, setDate] = useState(null); // Add state for date
 
     return (
         <div>
-            <AdminLayout title={"List Of Agents"}>
+            <AdminLayout title={"List Of Customers"}>
                 <div className="flex flex-wrap mx-auto lg:mx-0 items-center justify-around">
 
                     <div className='bg-white md:w-[258px] w-[250px] md:h-[138px] md:p-4  border border-none rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-4'>
@@ -146,9 +145,9 @@ function ListOfAgents(props) {
                 <div>
                     <div className='flex items-center justify-between'>
                         <div>
-                            <p className="m-0">Agent Lists</p>
+                            <p className="m-0">Customer Lists</p>
                             <div>
-                                <p className="m-0 md:text-[16px] text-[13px] text-gray-500"> Here below are the lists of agents</p>
+                                <p className="m-0 md:text-[16px] text-[13px] text-gray-500"> Here below are the lists of<br/>  customers</p>
                             </div>
                         </div>
                         <div className='flex items-center md:gap-4   justify-end'>
@@ -176,4 +175,4 @@ function ListOfAgents(props) {
     );
 }
 
-export default ListOfAgents;
+export default ListOfCustomers;
