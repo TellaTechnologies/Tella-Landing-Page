@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import HeroSection from "./components/HeroSection";
 import ProductsSection from "./components/ProductsSection";
 import Navbar from "./components/Navbar";
@@ -14,7 +14,8 @@ import Home from "./Pages/home";
 import Transactions from "./Pages/admin/Agents/transactions";
 import ListOfAgents from "./Pages/admin/Agents/ListOfAgents";
 import ListOfCustomers from './Pages/admin/Customers/ListOfCustomers'
-function App() {
+function App({agent}) {
+
   return (
     <div className="font-sans ">      
        <Router>
