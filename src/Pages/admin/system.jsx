@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '../../components/admin/adminLayout';
 import Rectangle from '../../assets/Rectangle.svg'
 import RectangleOne from '../../assets/Rectangle2.svg'
@@ -6,12 +6,13 @@ import Frame from '../../assets/Frame1.svg'
 import FrameTwo from '../../assets/Frame2.svg'
 import FrameThree from '../../assets/Frame3.svg'
 import FrameFive from '../../assets/Frame55.svg'
-import { ArrowDownToLine, ArrowUp} from 'lucide-react';
+import { ArrowDownToLine, ArrowUp, ChevronDown} from 'lucide-react';
 import {Input} from '../../components/ui/input'
 import { Label } from "@/components/ui/label"
 import {Button} from '@/components/ui/button'
 
 function system(props) {
+    const [system, setSystemContext] = useState(true)
     return (
         <div> 
             <AdminLayout title={"System Admin"}>
@@ -142,73 +143,162 @@ function system(props) {
                         </div>
                     </div>
                 </div> 
-                <div className='flex flex-wrap mx-auto items-center justify-center gap-4 '>
-                    {/*Add User Admin  */}
-                    <div>
+                {
+                    system ?
+                    <div className='flex flex-wrap mx-auto items-center justify-center gap-4 '>
+                        {/*Add User Admin  */}
                         <div>
-                            <p className="m-0 md:text-[22px]  font-semibold text-[18px]">
-                                Add a New user
+                            <div>
+                                <p className="m-0 md:text-[22px]  font-semibold text-[18px]">
+                                    Add a New user
+                                </p>
+                                <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Register a new user</p>
+                            </div>
+                            <div className='md:pt-8  mt-3 md:p-0 pt-5 p-9 bg-white md:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
+                                <div>
+                                    <p className="m-0 md:text-[22px] font-semibold text-center text-[18px]">
+                                        Add a new Admin
+                                    </p>
+                                    <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
+                                </div>
+                                <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                    <Label className="font-semibold" htmlFor="name">Full Name</Label>
+                                    <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
+                                </div>
+                                <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                    <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
+                                    <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
+                                </div>
+                                <div className='flex justify-center my-5 md:my-20'>
+                                    <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <div  className="relative flex w-[30%] font-semibold rounded-lg">
+                                    <p className="m-0 md:text-[22px] text-[18px]">
+                                        New Requests
+                                    </p>
+                                    <span className="absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
+                                        0
+                                        <span className="sr-only">unread messages</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div className='md:pt-8 md:mt-9 mt-4 md:p-0 p-4 bg-white md:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
+                                <div>
+                                    <p className="md:ms-8 text-start text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">New Admin Requests</p>
+                                </div> 
+                                <div>
+                                    <div className='flex md:gap-0 gap-3 md:py-5 py-3 items-start md:w-[80%] mx-auto justify-between'>
+                                        <div>
+                                            <p className="m-0 font-semibold md:text-[16px]">
+                                                Oluwatobi Fasanmi Ltd
+                                            </p>
+                                            <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                                9088065789
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <Button onClick={()=> setSystemContext(prev=> !prev)} type="button" className='bg-[#2097CF] '>View Details</Button>
+                                        </div>
+                                    </div>
+                                    <div></div>
+                                </div>                           
+                                <div className='flex justify-center my-5 md:my-20'>
+                                    <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Accept All</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  :
+                    <div>                               
+                        <div  className="relative flex w-fit font-semibold rounded-lg">
+                            <p className="m-0 md:text-[22px] text-[18px]">
+                                New Requests
                             </p>
-                            <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Register a new user</p>
+                            <span className="absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
+                                0
+                                <span className="sr-only">unread messages</span>
+                            </span>
                         </div>
-                        <div className='md:pt-8  mt-3 md:p-0 pt-5 p-9 bg-white md:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
+                        <div className='flex items-center md:px-5 md:pt-5 md:pb-3  justify-between bg-white  border-b-[#D9D9D9] border-b-2  pt-4 pb-2 px-4 rounded-t-3xl'>
                             <div>
-                                <p className="m-0 md:text-[22px] font-semibold text-center text-[18px]">
-                                    Add a new Admin
+                                <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                    New Admin Requests
                                 </p>
-                                <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
                             </div>
-                            <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                <Label className="font-semibold" htmlFor="name">Full Name</Label>
-                                <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
-                            </div>
-                            <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
-                                <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
-                            </div>
-                            <div className='flex justify-center my-5 md:my-20'>
-                                <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <div  class="relative flex w-[30%] font-semibold rounded-lg">
-                                <p className="m-0 md:text-[22px] text-[18px]">
-                                    New Requests
-                                </p>
-                                <span class="absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
-                                    0
-                                    <span class="sr-only">unread messages</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div className='md:pt-8 md:mt-9 mt-4 md:p-0 p-4 bg-white md:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
                             <div>
-                                <p className="md:ms-8 text-start text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">New Admin Requests</p>
-                            </div> 
-                            <div>
-                                <div className='flex md:gap-0 gap-3 md:py-5 py-3 items-start md:w-[80%] mx-auto justify-between'>
+                                <div className="m-0 flex justify-between items-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
                                     <div>
-                                        <p className="m-0 font-semibold md:text-[16px]">
-                                            Oluwatobi Fasanmi Ltd
-                                        </p>
-                                        <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
-                                            9088065789
-                                        </p>
+                                        Assign to
                                     </div>
                                     <div>
-                                        <Button className='bg-[#2097CF] '>View Details</Button>
+                                        <ChevronDown/>
                                     </div>
                                 </div>
-                                <div></div>
-                            </div>                           
-                            <div className='flex justify-center my-5 md:my-20'>
-                                <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Accept All</Button>
+                            </div>
+                        </div>
+                        <div className='flex flex-wrap'>
+                            <div className='bg-white md:h-[400px]  w-[50%]'>
+                                <div className='md:w-[90%] w-[80%] mx-3  my-3 md:my-6 md:mx-auto'>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        Business Name
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>-------------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        Phone Number
+                                    </p>
+                                    <p className='font-semibold'>---------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        State
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>----------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        City
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>----------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        Postal code
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>-----------</p>
+                                </div>
+                            </div>
+                            <div  className='bg-white  border border-r-[#D9D9D9] md:h-[400px]  w-[50%]'>
+                                <div className='md:w-[50%] md:ms-0 ms-3 my-2  mx-auto md:my-4 '>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        Residential Address
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>-------------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        State
+                                    </p>
+                                    <p className='font-semibold'>---------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        City
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>----------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        Postal Code
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>----------</p>
+                                    <p className=" text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                        Bank Verification Number
+                                    </p>
+                                    <p className='md:pb-2 font-semibold'>----------</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='bg-white flex gap-4 justify-center p-3 md:p-5 w-full rounded-b-[20px] border border-t-2 border-t-[#D9D9D9]'>
+                            <div>
+                                <Button className="bg-[#2097CF] md:px-20 md:py-7">Accept</Button>
+                            </div>
+                            <div>
+                                <Button className="bg-transparent text-black border-2 md:px-20 md:py-[1.6rem]">Reject</Button>
                             </div>
                         </div>
                     </div>
-                </div> 
+                }
             </AdminLayout>                           
         </div>
     );

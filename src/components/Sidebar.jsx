@@ -65,23 +65,23 @@ const Sidebar = () => {
                             </div>
                         </div> : <div></div>}                        
 
-                        <NavLink to={"/dashboard/customers/list"} className={({isActive}) =>{ 
-                            return `flex items-center justify-start gap-3 hover:text-black text-white hover:bg-white md:ms-8 md:p-3 p-3 my-3 ms-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 
-                            ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-black"}`;
+                        <NavLink to={"/dashboard/customers/list"} className={({isActive}) => { 
+                            return `flex items-center justify-start gap-3 hover:text-black hover:bg-white md:ms-8 md:p-3 p-3 my-3 ms-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 
+                            ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
                             {({ isActive }) => (
                               <>
                                 <div className=''>
                                     <img className='md:w-[20px] w-[18px]' src={isActive ? VectorThree : VectorFour} alt="" />
                                 </div>
-                                <div className='flex items-center justify-center'>
-                                    <p className={`${isActive ? "text-black ": "text-white"} m-0 md:text-[16px] text-[14px] font-semibold`}>Customers</p>
+                                <div className='flex hover:text-black items-center justify-center'>
+                                    <p className={` m-0 md:text-[16px] text-[14px] hover:text-black font-semibold`}>Customers</p>
                                 </div>
                               </>
                             )}
                         </NavLink>
                         <NavLink to={"/dashboard/agent/list"} className={({ isActive }) => {
-                            return `flex items-center justify-start gap-3  md:ms-8 md:p-3 p-3 my-3 ms-4 
+                            return `flex items-center hover:bg-white hover:rounded-l-[30px] hover:text-black justify-start gap-3  md:ms-8 md:p-3 p-3 my-3 ms-4 
                              ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
                             {({ isActive }) => (  // Move isActive inside the function scope
@@ -96,7 +96,7 @@ const Sidebar = () => {
                             )}
                         </NavLink>
                         <NavLink to={"/dashboard/system-admin"} className={({isActive}) => {
-                            return `flex items-center justify-start gap-3 hover:bg-white md:ms-8 md:p-3 p-3 ms-4 md:my-0 my-3 hover:border hover:border-none hover:rounded-l-[30px]
+                            return `flex items-center justify-start gap-3 hover:bg-white md:ms-8 md:p-3 p-3 ms-4 md:my-0 my-3 hover:border hover:border-none hover:text-black hover:rounded-l-[30px]
                             ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
 

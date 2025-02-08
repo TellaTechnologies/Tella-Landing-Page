@@ -161,7 +161,7 @@ function Transactions() {
                         </div>
                     </div>
                     <div>
-                        <div className='flex items-center justify-between'>
+                        <div className='flex flex-wrap items-center justify-between'>
                             <div>
                                 <p className="m-0">Agent Transactions</p>
                                 
