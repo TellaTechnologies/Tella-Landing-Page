@@ -31,7 +31,7 @@ export default function AdminLayout({ children, title, SetAgentProfile }) {
         </div>
       ) : null}
 
-      <SidebarInset>
+      <SidebarInset className=" md:h-[500px] md:overflow-y-scroll"> 
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
           <div className="flex justify-start items-center gap-3">
             <Menu onClick={() => setNavDisplay(prevState => !prevState)} size={30} className="text-black" />

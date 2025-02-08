@@ -191,10 +191,10 @@ function ListOfAgents() {
                             </div>
                         </> :
                         <div className="lg:flex items-center justify-between">
-                            <div className='md:h-[307px] flex items-center justify-center gap-4 lg:w-[60%] md:[100%] bg-white border rounded-md'>
+                            <div className='md:h-[307px] md:flex items-center justify-center md:gap-3  lg:gap-4 lg:w-[60%] md:w-[100%] bg-white border rounded-md'>
                                 <div>
                                     <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-                                        <DummyImage src={selectedImage} width={250} height={250} shape="avatar" />  
+                                        <DummyImage className='lg:w-full md:w-[200px] w-[150px] mx-auto md:my-0 my-3 rounded-[100%]' src={selectedImage} width={250} height={250} shape="avatar" />  
                                     </label>                                    
                                     <input 
                                         type="file" 
@@ -204,10 +204,10 @@ function ListOfAgents() {
                                         accept="image/*"
                                     />
                                 </div>
-                                <div>
+                                <div className='md:block flex justify-center md:my-0 my-3'>
                                     <div>
-                                        <p className="m-0 md:text-[32px] font-semibold">Oluwatobi Fasanmi </p>
-                                        <p className='text-gray-400 md:text-[20px] font-semibold'>0903546789</p>
+                                        <p className="m-0 md:text-[24px] text-[17px]  lg:text-[32px] font-semibold">Oluwatobi Fasanmi </p>
+                                        <p className='text-gray-400 md:text-[18px] text-[15px] lg:text-[20px] font-semibold'>0903546789</p>
                                         <Rating/>
                                     </div>
                                     <div className='md:mt-10'>
@@ -215,12 +215,12 @@ function ListOfAgents() {
                                     </div>
                                 </div>
                             </div>
-                            <div className='h-[307px] md:w-[60%] md:mx-auto md:my-4 lg:w-[40%] bg-white border rounded-md border-l-2'>                               
-                                <div className='mx-auto md:w-[60%] lg:w-[50%] md:my-5 lg:my-9'>
-                                    <div className='flex justify-end'>
+                            <div className='md:h-[307px] my-3 h-[240px] md:w-[80%] md:mx-auto md:my-4 lg:w-[40%] bg-white border rounded-md border-l-2'>                               
+                                <div className='mx-auto md:w-[60%] lg:w-[60%] md:my-5 lg:my-9'>
+                                    <div className='flex justify-end md:me-0 md:mt-0 mt-2 me-2'>
                                         <Link className='text-[#00ADFF] text-[16px]'>See all</Link>
                                     </div>
-                                    <div className='bg-white  md:w-[258px] w-[250px] md:h-[138px] lg:p-4  border-2 rounded-[20px] md:ps-2  p-5 flex items-center justify-between md:my-4 lg:my-0 my-4'>
+                                    <div className='bg-white  md:w-[258px] w-[250px] md:h-[160px] lg:p-4  border-2 rounded-[20px] md:ps-2  p-5  mx-auto items-center justify-between md:my-4 lg:my-0 my-4'>
                                         <div>
                                             <div className='flex  justify-between md:gap-24 gap-20 lg:gap-20'>
                                                 <div className='flex justify-center gap-3'>

@@ -95,8 +95,8 @@ const Sidebar = () => {
                                 </>
                             )}
                         </NavLink>
-                        <NavLink to={"/admin"} className={({isActive}) => {
-                            return `flex items-center justify-start gap-3 hover:text-black text-white hover:bg-white md:ms-8 md:p-3 p-3 ms-4 md:my-0 my-3 hover:border hover:border-none hover:rounded-l-[30px]
+                        <NavLink to={"/dashboard/system-admin"} className={({isActive}) => {
+                            return `flex items-center justify-start gap-3 hover:bg-white md:ms-8 md:p-3 p-3 ms-4 md:my-0 my-3 hover:border hover:border-none hover:rounded-l-[30px]
                             ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
 
@@ -105,8 +105,13 @@ const Sidebar = () => {
                                 <div className='hover:text-black text-white'>
                                     <img className='md:w-[20px] w-[18px]' src={isActive ? VectorThree : VectorTwo} alt="" />
                                 </div>
-                                <div className='flex items-center justify-center'>
+                                {/* <div className='flex items-center justify-center'>
                                     <p className="m-0 md:text-[16px] text-[14px] font-semibold">System Admin</p>
+                                </div> */}
+                                <div className="flex items-center justify-center">
+                                    <span className={` ${isActive ? "text-black" : "text-white"}m-0 md:text-[16px] text-[14px] font-semibold`}>
+                                    System Admin <span class="badge border text-white border-none rounded-[100%] px-2 py-1 bg-red-700">0</span>
+                                    </span>
                                 </div>
                             </>
                            )}
