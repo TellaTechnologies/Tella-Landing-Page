@@ -10,9 +10,11 @@ import { ArrowDownToLine, ArrowUp, ChevronDown} from 'lucide-react';
 import {Input} from '../../components/ui/input'
 import { Label } from "@/components/ui/label"
 import {Button} from '@/components/ui/button'
+import { Link } from 'react-router-dom';
 
 function system(props) {
     const [system, setSystemContext] = useState(true)
+    const [admin, createAdmin] = useState(false)
     return (
         <div> 
             <AdminLayout title={"System Admin"}>
@@ -145,7 +147,7 @@ function system(props) {
                 </div> 
                 {
                     system ?
-                    <div className='flex flex-wrap mx-auto items-center justify-center gap-4 '>
+                    <div className={`${admin ? " hidden" : "lg:flex"} flex-wrap  mx-auto items-center justify-center gap-4 `}>
                         {/*Add User Admin  */}
                         <div>
                             <div>
@@ -154,29 +156,31 @@ function system(props) {
                                 </p>
                                 <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Register a new user</p>
                             </div>
-                            <div className='md:pt-8  mt-3 md:p-0 pt-5 p-9 bg-white md:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
-                                <div>
-                                    <p className="m-0 md:text-[22px] font-semibold text-center text-[18px]">
-                                        Add a new Admin
-                                    </p>
-                                    <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
+                            <form onSubmit={()=>createAdmin(false)}>
+                                <div className='md:pt-8  mt-3 md:p-0 pt-5 p-9 bg-white md:w-[450px] lg:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
+                                    <div>
+                                        <p className="m-0 md:text-[22px] font-semibold text-center text-[18px]">
+                                            Add a new Admin
+                                        </p>
+                                        <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
+                                    </div>
+                                    <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="name">Full Name</Label>
+                                        <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
+                                    </div>
+                                    <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
+                                        <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
+                                    </div>
+                                    <div className='flex justify-center my-5 md:my-20'>
+                                        <Button type="button" onClick={() => createAdmin(true)} className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
+                                    </div>
                                 </div>
-                                <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                    <Label className="font-semibold" htmlFor="name">Full Name</Label>
-                                    <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
-                                </div>
-                                <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                    <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
-                                    <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
-                                </div>
-                                <div className='flex justify-center my-5 md:my-20'>
-                                    <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                         <div>
                             <div>
-                                <div  className="relative flex w-[30%] font-semibold rounded-lg">
+                                <div  className="relative flex md:w-[35%] w-[42%]  lg:mt-0 mt-4 lg:w-[30%] font-semibold rounded-lg">
                                     <p className="m-0 md:text-[22px] text-[18px]">
                                         New Requests
                                     </p>
@@ -186,7 +190,7 @@ function system(props) {
                                     </span>
                                 </div>
                             </div>
-                            <div className='md:pt-8 md:mt-9 mt-4 md:p-0 p-4 bg-white md:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
+                            <div className='md:pt-8 md:mt-9 mt-4 md:p-0 p-4 bg-white md:w-[450px] lg:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
                                 <div>
                                     <p className="md:ms-8 text-start text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">New Admin Requests</p>
                                 </div> 
@@ -297,6 +301,59 @@ function system(props) {
                                 <Button className="bg-transparent text-black border-2 md:px-20 md:py-[1.6rem]">Reject</Button>
                             </div>
                         </div>
+                    </div>
+                }
+                {
+                    admin ?
+                    <div className='w-[100%] bg-white border-none rounded-[20px] h-[610px]'>  
+                        <div className='lg:flex md:w-[100%] flex-wrap justify-between '>
+                            <div className='md:pt-8  md:w-[50%]  mt-3 md:p-4 pt-5 p-9'>
+                                <div>
+                                    <p className="m-0 md:text-[17px] lg:text-[22px] font-semibold text-center text-[18px]">
+                                        Add a new Admin
+                                    </p>
+                                    <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
+                                </div>
+                                <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                    <Label className="font-semibold" htmlFor="name">Full Name</Label>
+                                    <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
+                                </div>
+                                <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                    <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
+                                    <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
+                                </div>
+                                <div className='flex justify-center my-5 md:my-20'>
+                                    <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
+                                </div>
+                            </div>
+                            <div className='md:w-[50%] md:pt-8  mt-3 border-l-2  border-l-[#D9D9D9]'>
+                                <div className='flex md:gap-2 lg:gap-6 justify-center'>
+                                    <div>
+                                        <p className="text-center md:text-[16px] lg:text-[22px] text-[18px] font-semibold">New Admin</p>
+                                        <p className='text-[#282828] opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
+                                    </div>
+                                    <div>
+                                        <Link className="text-blue-600 md:text-[14px] text-[12px] lg:text-[16px] ">See all</Link>
+                                    </div>
+                                </div>
+                                <div className='flex md:gap-0 gap-3 md:py-5 py-3 items-start md:w-[80%] mx-auto justify-between'>
+                                    <div>
+                                        <p className="m-0 font-semibold md:text-[16px]">
+                                            Oluwatobi Fasanmi Ltd
+                                        </p>
+                                        <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                            9088065789
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <Button onClick={()=> setSystemContext(prev=> !prev)} type="button" className='bg-[#2097CF] '>View Details</Button>
+                                    </div>
+                                </div>                                
+                            </div> 
+                        </div>                                                 
+                    </div> :
+                    <div>
+                        
                     </div>
                 }
             </AdminLayout>                           
