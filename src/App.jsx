@@ -7,6 +7,7 @@ import Transactions from "./Pages/admin/Agents/transactions";
 import ListOfAgents from "./Pages/admin/Agents/ListOfAgents";
 import ListOfCustomers from './Pages/admin/Customers/ListOfCustomers'
 import System from "./Pages/admin/system";
+import Settings from "./Pages/admin/settings";
 function App({agent}) {
 
   return (
@@ -19,6 +20,7 @@ function App({agent}) {
             <Route path="/dashboard/customers/list" element={<ListOfCustomers/>}/>
             <Route path="/dashboard/customers/transactions" element={<CustomersTransactions/>}/>
             <Route path="/dashboard/system-admin" element={<System/>}/>
+            <Route path="/dashboard/settings" element={<Settings/>}/>
           </Routes>
         </Router>
       {/* <Navbar /> */}

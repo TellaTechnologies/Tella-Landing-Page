@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/Tellalogobnw.png"; // Replace with your logo image
+import logo from "../assets/image/Tellalogobnw.png"; // Replace with your logo image
 
 const Footer = () => {
   return (

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/admin/adminLayout';
-import Rectangle from '../../assets/Rectangle.svg'
-import RectangleOne from '../../assets/Rectangle2.svg'
-import Frame from '../../assets/Frame1.svg'
-import FrameTwo from '../../assets/Frame2.svg'
-import FrameThree from '../../assets/Frame3.svg'
-import FrameFive from '../../assets/Frame55.svg'
+import Rectangle from '../../assets/image/Rectangle.svg'
+import RectangleOne from '../../assets/image/Rectangle2.svg'
+import Frame from '../../assets/image/Frame1.svg'
+import FrameTwo from '../../assets/image/Frame2.svg'
+import FrameThree from '../../assets/image/Frame3.svg'
+import FrameFive from '../../assets/image/Frame55.svg'
 import { ArrowDownToLine, ArrowUp, ChevronDown} from 'lucide-react';
 import {Input} from '../../components/ui/input'
 import { Label } from "@/components/ui/label"
@@ -305,9 +305,9 @@ function system(props) {
                 }
                 {
                     admin ?
-                    <div className='w-[100%] bg-white border-none rounded-[20px] h-[610px]'>  
-                        <div className='lg:flex md:w-[100%] flex-wrap justify-between '>
-                            <div className='md:pt-8  md:w-[50%]  mt-3 md:p-4 pt-5 p-9'>
+                    <div className='md:w-[100%] sm:w-[70%] mx-auto bg-white border-none rounded-[20px] h-[610px]'>  
+                        <div className='md:flex md:w-[100%] flex-wrap justify-between '>
+                            <div className='md:pt-8 md:w-[50%]  mt-3 md:p-4 pt-5 p-9'>
                                 <div>
                                     <p className="m-0 md:text-[17px] lg:text-[22px] font-semibold text-center text-[18px]">
                                         Add a new Admin
@@ -326,17 +326,17 @@ function system(props) {
                                     <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
                                 </div>
                             </div>
-                            <div className='md:w-[50%] md:pt-8  mt-3 border-l-2  border-l-[#D9D9D9]'>
+                            <div className='md:w-[50%] md:pt-8  mt-3 md:border-l-2  sm:border-l-[#D9D9D9]'>
                                 <div className='flex md:gap-2 lg:gap-6 justify-center'>
                                     <div>
                                         <p className="text-center md:text-[16px] lg:text-[22px] text-[18px] font-semibold">New Admin</p>
-                                        <p className='text-[#282828] opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
+                                        <p className='text-[#282828] md:ms-0 ms-3 opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
                                     </div>
                                     <div>
-                                        <Link className="text-blue-600 md:text-[14px] text-[12px] lg:text-[16px] ">See all</Link>
+                                        <Link className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
                                     </div>
                                 </div>
-                                <div className='flex md:gap-0 gap-3 md:py-5 py-3 items-start md:w-[80%] mx-auto justify-between'>
+                                <div className='flex md:gap-0 gap-3 md:py-5 mx-4  py-3 items-start md:w-[80%] md:mx-auto justify-between'>
                                     <div>
                                         <p className="m-0 font-semibold md:text-[16px]">
                                             Oluwatobi Fasanmi Ltd

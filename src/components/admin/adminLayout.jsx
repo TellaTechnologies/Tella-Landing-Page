@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import {Button} from '@/components/ui/button'
-import MagnifyingGlass from '../../assets/coolicon.svg'
+import MagnifyingGlass from '../../assets/image/coolicon.svg'
 import {
   Breadcrumb,
   BreadcrumbItem,

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import Frame from '../assets/Frame.svg'
+import Frame from '../assets/image/Frame.svg'
 import { HomeIcon, LogOut, Settings } from 'lucide-react';
-import Vector from '../assets/Vector.svg'
-import VectorOne from '../assets/Vector (1).svg'
-import VectorTwo from '../assets/Vector (2).svg'
-import VectorThree from '../assets/Vector 2 (1).svg'
-import VectorFour from '../assets/Vector 3.svg'
-import VectorFive from '../assets/Vector 3(1).svg'
-import Help from '../assets/help.svg'
-import Side from '../assets/Vector 4.svg'
+import Vector from '../assets/image/Vector.svg'
+import VectorOne from '../assets/image/Vector (1).svg'
+import VectorTwo from '../assets/image/Vector (2).svg'
+import VectorThree from '../assets/image/Vector 2 (1).svg'
+import VectorFour from '../assets/image/Vector 3.svg'
+import VectorFive from '../assets/image/Vector 3(1).svg'
+import Help from '../assets/image/help.svg'
+import Side from '../assets/image/Vector 4.svg'
 import { Link, NavLink } from 'react-router-dom';
 
 
@@ -117,14 +117,14 @@ const Sidebar = () => {
                            )}
                         </NavLink>
 
-                        <NavLink to={"/Settings"} className={({isActive}) => { return `flex items-center justify-start gap-3 hover:text-black text-white hover:bg-white md:ms-8 md:p-3 p-3 ms-4 my-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 ${isActive ? "text-black bg-white rounded-l-[30px] " : "text-white" }`;}}>
+                        <NavLink to={"/dashboard/settings"} className={({isActive}) => { return `flex items-center justify-start gap-3 hover:text-black  hover:bg-white md:ms-8 md:p-3 p-3 ms-4 my-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 ${isActive ? "text-black bg-white rounded-l-[30px] " : "text-white" }`;}}>
                             {({isActive}) => (
                                 <>
-                                    <div className={` ${isActive ? " text-black" : "text-white"}hover:text-black text-white`}>
+                                    <div className={` ${isActive ? " text-black" : "text-white"}hover:text-black `}>
                                         <Settings className={`${isActive ? "text-black" : "text-white"}hover:text-black`} size={20}/>
                                     </div>
                                     <div className='flex items-center justify-center'>
-                                        <p className="m-0 md:text-[16px] text-[14px] font-semibold">Settings</p>
+                                        <p className={`${isActive ? "text-black" : "text-white"} m-0 md:text-[16px] text-[14px] font-semibold`}>Settings</p>
                                     </div>
                                 </>
                             )}

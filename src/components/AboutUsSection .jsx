@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/Tellalogo.png"; // Replace with your logo image
+import logo from "../assets/image/Tellalogo.png"; // Replace with your logo image
 
 const AboutUsSection = () => {
   return (

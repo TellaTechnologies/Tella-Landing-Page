@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../../components/admin/adminLayout';
-import Rectangle from '../../../assets/Rectangle.svg'
-import RectangleOne from '../../../assets/Rectangle2.svg'
-import Frame from '../../../assets/Frame1.svg'
-import FrameTwo from '../../../assets/Frame2.svg'
-import FrameThree from '../../../assets/Frame3.svg'
-import MagnifyingGlass from '../../../assets/coolicon.svg'
+import Rectangle from '../../../assets/image/Rectangle.svg'
+import RectangleOne from '../../../assets/image/Rectangle2.svg'
+import Frame from '../../../assets/image/Frame1.svg'
+import FrameTwo from '../../../assets/image/Frame2.svg'
+import FrameThree from '../../../assets/image/Frame3.svg'
+import MagnifyingGlass from '../../../assets/image/coolicon.svg'
 import { ArrowDownToLine, ArrowUp, CalendarIcon, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from "@/lib/utils"

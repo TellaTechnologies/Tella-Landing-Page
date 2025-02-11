@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import phoneImage from "../assets/PhoneImage.svg"; // Replace with your actual phone image
-import logo from "../assets/Tellalogo.png"; // Replace with your logo image
+import phoneImage from "../assets/image/PhoneImage.svg"; // Replace with your actual phone image
+import logo from "../assets/image/Tellalogo.png"; // Replace with your logo image
 import Header from '../components/Navbar'
-import faqImage from "../assets/Faq.svg"; // Replace with your actual image path
+import faqImage from "../assets/image/Faq.svg"; // Replace with your actual image path
 import Footer from '../components/Footer';
 import { Button } from "@/components/ui/button";
 const Home = () => {
