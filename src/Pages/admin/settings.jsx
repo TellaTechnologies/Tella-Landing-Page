@@ -363,10 +363,10 @@ function settings() {
                                     </div>
                                 </div>
                                 <div className='flex md:mt-4 mt-2 flex-wrap items-center justify-between'>
-                                    <div>
+                                    <div>   
                                         <div>
                                             <p className="m-0 font-semibold">Email Notifications</p>
-                                        </div>
+                                        </div>   
                                         <div>
                                             <p className="m-0  text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Receive email alerts for failed transactions</p>
                                         </div>
