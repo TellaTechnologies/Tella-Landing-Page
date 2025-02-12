@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/admin/adminLayout';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUp, Filter, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import MagnifyingGlass from '../../assets/image/magnifyinglass2.svg'
-
+import FrameThree from '../../assets/image/Frame3.svg'
+import RectangleOne from '../../assets/image/Rectangle.svg'
+import Warning from '../../assets/image/warning.svg'
 import {
     Table,
     TableBody,
@@ -17,17 +19,19 @@ import {
 import { Label } from "@/components/ui/label"
 import { Input } from '../../components/ui/input';
 import {Button} from '@/components/ui/button'
-
-
-function settings(props) {
-    const [user, checkUser] = useState(true)
+import Error from '../../assets/image/error.svg'
+import Checkbox from "../../assets/image/Checkboxes.svg"
+import {Switch} from '@/components/ui/switch'
+function settings() {
+    const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
+    const [num, setNum ]= useState(0)
 
     const invoices= []
     return (
         <div>
-            {
-                user ?
-                <AdminLayout title={"System Admin Settings"}>
+            {/* {
+                view === 'admin' && (
+                <AdminLayout  title={"System Admin Settings"}>
                     <div>
                         <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">User Management</p>
                     </div>
@@ -37,7 +41,7 @@ function settings(props) {
                             <div>
                                 <p className="m-0 'text-[#282828] opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">View, edit and deactivate user accounts </p>
                             </div>
-                            <Link onClick={()=> checkUser(false)} className='flex md:mt-4 mt-5 items-center gap-2'>
+                            <Link onClick={()=> setView("user")} className='flex md:mt-4 mt-5 items-center gap-2'>
                                 <div>
                                     <p className="text-[#2097CF] m-0">Manage Users</p>
                                 </div>
@@ -69,7 +73,7 @@ function settings(props) {
                                 <div>
                                     <p className="m-0 'text-[#282828] opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">Review and resolve failed or pending transactions </p>
                                 </div>
-                                <Link className='flex md:mt-4 mt-5 items-center gap-2'>
+                                <Link onClick={() => setView("transactions")} className='flex md:mt-4 mt-5 items-center gap-2'>
                                     <div>
                                         <p className="text-[#2097CF] m-0">View Transactions</p>
                                     </div>
@@ -124,7 +128,10 @@ function settings(props) {
                             </Link>
                         </div>
                     </div>
-                </AdminLayout> :
+                </AdminLayout>
+            )} */}
+            {
+                view === 'user' && (
                 <AdminLayout title={"User Management"}>
                     <div>
                         <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Manage user accounts and permission </p>
@@ -181,7 +188,210 @@ function settings(props) {
                             <Button type="button"  className="bg-[#2097CF]  text-white w-[30%] md:p-4">Assign</Button>
                         </div>
                     </div>
-                </AdminLayout>
+                </AdminLayout>  
+            )} 
+            { 
+                view == 'admin' && (
+                    <AdminLayout title={"Transaction Management"}>
+                        <div>
+                            <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Manage user accounts and permission </p>
+                        </div>
+                        <div className='flex flex-wrap  justify-center items-center md:justify-between'>
+                            <div className='bg-[#fff] md:w-[353px] w-[250px] md:h-[138px] md:p-4  rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-3'>
+                                <div>
+                                    <div className='flex md:gap-32 gap-10'>
+                                        <div className='flex gap-4 justify-between items-center'>
+                                            <div>
+                                                <img src={RectangleOne}/>
+                                            </div>
+                                            <div className='flex'>
+                                                <div>
+                                                    <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Failed Transactions</p>
+                                                    <p className='lg:text-[30px]   md:text-[25px]'>0</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <img src={Warning}/>
+                                        </div>
+                                    </div>
+                                    <div className='flex items-center gap-1 lg:mt-0  mt-1 md:mt-6'>
+                                        <div>
+                                            <ArrowUp color='#000' size={15}/>
+                                        </div>
+                                        <div>
+                                            <p className="m-0 text-[14px]">
+                                                <span className='text-red-500 font-semibold'>+12%</span>
+                                                <span className='ps-1'>
+                                                    high last week
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div className='bg-[#fff] md:w-[353px] w-[250px] md:h-[138px] md:p-4  rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-3'>
+                                <div>
+                                    <div className='flex md:gap-32  gap-10'>
+                                        <div className='flex gap-4 justify-between items-center'>
+                                            <div>
+                                                <img src={RectangleOne}/>
+                                            </div>
+                                            <div className='flex'>
+                                                <div>
+                                                    <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Pending Transactions</p>
+                                                    <p className='lg:text-[30px]   md:text-[25px]'>0</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <img src={Error}/>
+                                        </div>
+                                    </div>
+                                    <div className='flex items-center gap-1 lg:mt-0  mt-1 md:mt-6'>
+                                        <div>
+                                            <ArrowUp color='#000' size={15}/>
+                                        </div>
+                                        <div>
+                                            <p className="m-0 text-[14px]">
+                                                <span className='text-[#DC8018] font-semibold'>+12%</span>
+                                                <span className='ps-1'>
+                                                    high last week
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div className='bg-[#fff] md:w-[353px] w-[250px] md:h-[138px] md:p-4  rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-3'>
+                                <div>
+                                    <div className='flex md:gap-32  gap-10'>
+                                        <div className='flex gap-4 justify-between items-center'>
+                                            <div>
+                                                <img src={RectangleOne}/>
+                                            </div>
+                                            <div className='flex'>
+                                                <div>
+                                                    <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Resolved Transactions</p>
+                                                    <p className='lg:text-[30px]   md:text-[25px]'>0</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <img src={Checkbox}/>
+                                        </div>
+                                    </div>
+                                    <div className='flex items-center gap-1 lg:mt-0  mt-1 md:mt-6'>
+                                        <div>
+                                            <ArrowUp color='#000' size={15}/>
+                                        </div>
+                                        <div>
+                                            <p className="m-0 text-[14px]">
+                                                <span className='text-[#1CA700] font-semibold'>+12%</span>
+                                                <span className='ps-1'>
+                                                    high last week
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div className='md:p-1 p-2 bg-white rounded-lg'>
+                            <div className='md:p-5 md:mb-0 mb-3 flex items-center justify-between'>
+                                <div>
+                                    <p className="m-0 md:text-[18px] text-[16px] font-medium leading-[18px]">Transaction Log</p>
+                                </div>
+                                <div className='md:gap-5 gap-2 flex flex-wrap'>
+                                    <Button className=" bg-transparent border">
+                                        <div>
+                                            <Filter color='#000' size={20}/>
+                                        </div>
+                                        <div>
+                                            <p className="m-0 text-black">Filter</p>
+                                        </div>
+                                    </Button>
+                                    <Button className="bg-[#2097CF]">
+                                        <div>
+                                            <RefreshCcw color='#fff' />
+                                        </div>
+                                        <div>
+                                            <p className="m-0 text-white">Refresh</p>
+                                        </div>
+                                    </Button>
+                                </div>
+                            </div>   
+                            <Table>
+                                <TableCaption>No Data, Just Yet.</TableCaption>
+                                <TableHeader>
+                                    <TableRow className="bg-[#f3f4f680]">
+                                        <TableHead className="">Transaction ID</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead className="text-center">Amounts</TableHead>
+                                        <TableHead className="text-center">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {invoices.map((invoice) => (
+                                    <TableRow key={invoice.invoice}>
+                                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
+                                        <TableCell>{invoice.paymentStatus}</TableCell>
+                                        <TableCell>{invoice.paymentMethod}</TableCell>
+                                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                                    </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>                        
+                        </div>
+                        <div className='bg-white rounded-lg'>
+                            <div className='md:p-4 p-2 border-b-2'>
+                                <p className="m-0 font-medium md:text-[18px] text-[17px]">Transaction Settings</p>
+                            </div>
+                            <div className='md:p-4 p-3'>
+                                <div className='flex flex-wrap items-center justify-between'>
+                                    <div>
+                                        <div>
+                                            <p className="m-0 font-semibold">Automatic Resolution</p>
+                                        </div>
+                                        <div>
+                                            <p className="m-0  text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Automatically attempt to resolve failed transactions</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Switch />
+                                    </div>
+                                </div>
+                                <div className='flex md:mt-4 mt-2 flex-wrap items-center justify-between'>
+                                    <div>
+                                        <div>
+                                            <p className="m-0 font-semibold">Email Notifications</p>
+                                        </div>
+                                        <div>
+                                            <p className="m-0  text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Receive email alerts for failed transactions</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Switch className="bg-[#2097CF] peers"  />
+                                    </div>
+                                </div>
+                                <div className='flex md:mt-4 mt-2 flex-wrap items-center justify-between'>
+                                    <div>
+                                        <div>
+                                            <p className="m-0 font-semibold">Retry Attempts</p>
+                                        </div>
+                                        <div>
+                                            <p className="m-0  text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Number of automatic retry attempts</p>
+                                        </div>
+                                    </div>
+                                    <div className='md:w-[54px] md:h-[35px] flex items-center justify-center font-semibold w-[40px] h-[40px]  text-black md:text-[15px] text-[14px] rounded-lg bg-[#D1D5DB]'>
+                                        {num}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </AdminLayout>
+                )
             }
         </div>
     );

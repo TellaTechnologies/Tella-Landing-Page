@@ -123,8 +123,8 @@ const Sidebar = () => {
                                     <div className={` ${isActive ? " text-black" : "text-white"}hover:text-black `}>
                                         <Settings className={`${isActive ? "text-black" : "text-white"}hover:text-black`} size={20}/>
                                     </div>
-                                    <div className='flex items-center justify-center'>
-                                        <p className={`${isActive ? "text-black" : "text-white"} m-0 md:text-[16px] text-[14px] font-semibold`}>Settings</p>
+                                    <div className='flex items-center hover:text-black justify-center'>
+                                        <p className={`${isActive ? "text-black" : ""} m-0 md:text-[16px] text-[14px] font-semibold`}>Settings</p>
                                     </div>
                                 </>
                             )}

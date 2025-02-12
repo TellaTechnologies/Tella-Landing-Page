@@ -10,6 +10,13 @@ html {
   display: none;
 }
 
+.data-\[state\=unchecked\]\:bg-input[data-state="unchecked"] {
+  background-color: #E5E7EB !important;
+}
+
+.data-\[state\=unchecked\]\:bg-input[data-state="checked"] {
+  background-color: #2097CF !important;
+}
 
 
 
