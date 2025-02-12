@@ -51,12 +51,12 @@ const Sidebar = () => {
                                     <img src={Side}/>
                                 </div>
                                 <div>
-                                    <NavLink to={"/dashboard/agent/transactions"} className={({isActive}) => `flex items-center gap-3 hover:text-white   md:pe-8  pe-2 p-2 hover:border hover:border-none hover:rounded-l-[30px] md:my-2 ${isActive ? "text-white bg-[#2097cF] rounded-l-[30px] " : "text-black "}`}>
+                                    <NavLink to={"/accounts/agent/transactions"} className={({isActive}) => `flex items-center gap-3 hover:text-white   md:pe-8  pe-2 p-2 hover:border hover:border-none hover:rounded-l-[30px] md:my-2 ${isActive ? "text-white bg-[#2097cF] rounded-l-[30px] " : "text-black "}`}>
                                         <div className='flex items-center justify-center'>
                                             <p className="m-0 md:text-[16px] text-[13px] font-semibold">Agent Transactions</p>
                                         </div>                            
                                     </NavLink>
-                                    <NavLink  to={"/dashboard/customers/transactions"} className={({isActive}) => `flex items-center gap-3 hover:text-white   md:pe-8  pe-2 p-2 hover:border hover:border-none hover:rounded-l-[30px] md:my-2 ${isActive ? "text-white bg-[#2097cF] rounded-l-[30px] " : "text-black "}`}>
+                                    <NavLink  to={"/accounts/customers/transactions"} className={({isActive}) => `flex items-center gap-3 hover:text-white   md:pe-8  pe-2 p-2 hover:border hover:border-none hover:rounded-l-[30px] md:my-2 ${isActive ? "text-white bg-[#2097cF] rounded-l-[30px] " : "text-black "}`}>
                                         <div className='flex items-center justify-center'>
                                             <p className="m-0 md:text-[16px] text-[13px] font-semibold">Customer Transactions</p>
                                         </div>                            
@@ -65,7 +65,7 @@ const Sidebar = () => {
                             </div>
                         </div> : <div></div>}                        
 
-                        <NavLink to={"/dashboard/customers/list"} className={({isActive}) => { 
+                        <NavLink to={"/accounts/customers/list"} className={({isActive}) => { 
                             return `flex items-center justify-start gap-3 hover:text-black hover:bg-white md:ms-8 md:p-3 p-3 my-3 ms-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 
                             ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
@@ -80,7 +80,7 @@ const Sidebar = () => {
                               </>
                             )}
                         </NavLink>
-                        <NavLink to={"/dashboard/agent/list"} className={({ isActive }) => {
+                        <NavLink to={"/accounts/agent/list"} className={({ isActive }) => {
                             return `flex items-center hover:bg-white hover:rounded-l-[30px] hover:text-black justify-start gap-3  md:ms-8 md:p-3 p-3 my-3 ms-4 
                              ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
@@ -95,7 +95,7 @@ const Sidebar = () => {
                                 </>
                             )}
                         </NavLink>
-                        <NavLink to={"/dashboard/system-admin"} className={({isActive}) => {
+                        <NavLink to={"/accounts/system-admin"} className={({isActive}) => {
                             return `flex items-center justify-start gap-3 hover:bg-white md:ms-8 md:p-3 p-3 ms-4 md:my-0 my-3 hover:border hover:border-none hover:text-black hover:rounded-l-[30px]
                             ${isActive ? "bg-white text-black rounded-l-[30px]" : "text-white"}`;
                         }}>
@@ -117,7 +117,7 @@ const Sidebar = () => {
                            )}
                         </NavLink>
 
-                        <NavLink to={"/dashboard/settings"} className={({isActive}) => { return `flex items-center justify-start gap-3 hover:text-black  hover:bg-white md:ms-8 md:p-3 p-3 ms-4 my-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 ${isActive ? "text-black bg-white rounded-l-[30px] " : "text-white" }`;}}>
+                        <NavLink to={"/accounts/settings"} className={({isActive}) => { return `flex items-center justify-start gap-3 hover:text-black  hover:bg-white md:ms-8 md:p-3 p-3 ms-4 my-4 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 ${isActive ? "text-black bg-white rounded-l-[30px] " : "text-white" }`;}}>
                             {({isActive}) => (
                                 <>
                                     <div className={` ${isActive ? " text-black" : "text-white"}hover:text-black `}>

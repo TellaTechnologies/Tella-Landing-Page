@@ -22,14 +22,20 @@ import {Button} from '@/components/ui/button'
 import Error from '../../assets/image/error.svg'
 import Checkbox from "../../assets/image/Checkboxes.svg"
 import {Switch} from '@/components/ui/switch'
+import axios from 'axios';
 function settings() {
     const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
 
+    // api url
+    // axios.post("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/", {
+
+    // })
+
     const invoices= []
     return (
         <div>
-            {/* {
+            {
                 view === 'admin' && (
                 <AdminLayout  title={"System Admin Settings"}>
                     <div>
@@ -129,7 +135,7 @@ function settings() {
                         </div>
                     </div>
                 </AdminLayout>
-            )} */}
+            )}
             {
                 view === 'user' && (
                 <AdminLayout title={"User Management"}>
@@ -191,7 +197,7 @@ function settings() {
                 </AdminLayout>  
             )} 
             { 
-                view == 'admin' && (
+                view == 'transactions' && (
                     <AdminLayout title={"Transaction Management"}>
                         <div>
                             <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Manage user accounts and permission </p>

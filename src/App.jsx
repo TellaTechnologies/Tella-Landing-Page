@@ -15,12 +15,12 @@ function App({agent}) {
        <Router>
           <Routes>
             <Route path="/" element={<Home/>}/>
-            <Route path="/dashboard/agent/transactions" element={<Transactions/>}/>
-            <Route path="/dashboard/agent/list" element={<ListOfAgents/>}/>
-            <Route path="/dashboard/customers/list" element={<ListOfCustomers/>}/>
-            <Route path="/dashboard/customers/transactions" element={<CustomersTransactions/>}/>
-            <Route path="/dashboard/system-admin" element={<System/>}/>
-            <Route path="/dashboard/settings" element={<Settings/>}/>
+            <Route path="/accounts/agent/transactions" element={<Transactions/>}/>
+            <Route path="/accounts/agent/list" element={<ListOfAgents/>}/>
+            <Route path="/accounts/customers/list" element={<ListOfCustomers/>}/>
+            <Route path="/accounts/customers/transactions" element={<CustomersTransactions/>}/>
+            <Route path="/accounts/system-admin" element={<System/>}/>
+            <Route path="/accounts/settings" element={<Settings/>}/>
           </Routes>
         </Router>
       {/* <Navbar /> */}
