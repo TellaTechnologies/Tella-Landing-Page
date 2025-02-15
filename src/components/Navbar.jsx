@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from "../assets//image/logo.png"; 
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,12 +26,12 @@ const Navbar = () => {
 
         {/* Action Buttons */}
         <div className=" md:flex space-x-4">
-          <button className="ml-48 md:ml-0 px-4 py-2 bg-[#2097CF] text-white hover:bg-blue-200 hover:text-[#2097CF] rounded">
+          <Link to={'/login'}  className="ml-48 md:ml-0 px-4 py-2 bg-[#2097CF] text-white hover:bg-blue-200 hover:text-[#2097CF] rounded">
             Login
-          </button>
-          <button className="hidden md:block px-4 py-2 border border-[#2097CF] text-[#282828] font-bold hover:bg-blue-200 rounded">
+          </Link>
+          <Link className="hidden md:block px-4 py-2 border border-[#2097CF] text-[#282828] font-bold hover:bg-blue-200 rounded" to={'/sign-up'}>
             Sign Up
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Toggle */}

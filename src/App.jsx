@@ -1,36 +1,45 @@
-import React, { useState } from "react";
-import CustomersTransactions from "./Pages/admin/Customers/transactions";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import "./App.css"
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
 import Home from "./Pages/home";
 import Transactions from "./Pages/admin/Agents/transactions";
 import ListOfAgents from "./Pages/admin/Agents/ListOfAgents";
-import ListOfCustomers from './Pages/admin/Customers/ListOfCustomers'
+import ListOfCustomers from "./Pages/admin/Customers/ListOfCustomers";
+import CustomersTransactions from "./Pages/admin/Customers/transactions";
 import System from "./Pages/admin/system";
 import Settings from "./Pages/admin/settings";
-function App({agent}) {
+import ProtectedRoute from "./ProtectedRoute";
+import { AuthProvider } from "./AuthContext";
+import { Login } from "./Pages/login";
 
+function App() {
   return (
-    <div className="font-sans ">      
-       <Router>
+    <AuthProvider>
+      <div className="font-sans">
+        <Router>
           <Routes>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/accounts/agent/transactions" element={<Transactions/>}/>
-            <Route path="/accounts/agent/list" element={<ListOfAgents/>}/>
-            <Route path="/accounts/customers/list" element={<ListOfCustomers/>}/>
-            <Route path="/accounts/customers/transactions" element={<CustomersTransactions/>}/>
-            <Route path="/accounts/system-admin" element={<System/>}/>
-            <Route path="/accounts/settings" element={<Settings/>}/>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login/>}/>
+            {/* Protect all routes starting with /accounts */}
+            <Route
+              path="/accounts/*"
+              element={
+                <ProtectedRoute>
+                  <Routes>
+                    <Route path="agent/transactions" element={<Transactions />} />
+                    <Route path="agent/list" element={<ListOfAgents />} />
+                    <Route path="customers/list" element={<ListOfCustomers />} />
+                    <Route path="customers/transactions" element={<CustomersTransactions />} />
+                    <Route path="system-admin" element={<System />} />
+                    <Route path="settings" element={<Settings />} />
+                  </Routes>
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Router>
-      {/* <Navbar /> */}
-      {/* <HeroSection /> */}
-      {/* <ProductsSection /> */}
-      {/* <AboutUsSection /> */}
-      {/* <FAQSection /> */}
-      {/* <ContactUsSection /> */}
-      {/* <Footer /> */}
-    </div>
+      </div>
+    </AuthProvider>
   );
 }
 
