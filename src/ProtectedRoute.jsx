@@ -1,12 +1,18 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
-  // Redirect to Home Page if user is not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+  useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, [navigate, token]);
+
+  if (!token) {
+    return null; // Prevents rendering before redirection
   }
 
   return children;

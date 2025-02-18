@@ -14,6 +14,12 @@ import { Link, NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
     const [Trans, TransactionsDropD] = useState(false)
+
+    const Logout =(e) => {
+        e.preventDefault()
+        localStorage.removeItem("token")
+        window.location.href = "/login"; // Force reload to apply route changes
+    }
    
     return (
         <div className='bg-[#2097CF]'>
@@ -138,9 +144,9 @@ const Sidebar = () => {
                                     <p className="m-0 md:text-[16px] text-[14px] font-semibold">Help</p>
                                 </div>
                             </div>
-                            <NavLink   to={"/logout"} className={({isActive}) =>  {return`flex items-center justify-start gap-3 hover:text-black text-white hover:bg-white md:ms-8 ms-4 p-3  md:p-3 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 ${isActive ? "bg-white rounded-l-[30px] text-black" : "text-white"}`}}>
+                            <NavLink  onClick={Logout} className={({isActive}) =>  {return`flex items-center justify-start gap-3 hover:text-black text-white hover:bg-white md:ms-8 ms-4 p-3  md:p-3 hover:border hover:border-none hover:rounded-l-[30px] md:my-5 ${isActive ? " rounded-l-[30px] text-black" : ""}`}}>
                                 <div className='hover:text-black text-white'>
-                                    <LogOut className='hover:text-black  md:w-[20px] w-[18px]' />
+                                    <LogOut className={`  md:w-[20px] w-[18px]`} />
                                 </div>
                                 <div className='flex items-center justify-center'>
                                     <p className="m-0 md:text-[16px] text-[14px] font-semibold">Log out</p>

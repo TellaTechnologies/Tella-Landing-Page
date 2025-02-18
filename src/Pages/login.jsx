@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 const passwordRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,}$/;
 
 
@@ -39,6 +39,7 @@ const formSchema = z.object({
 export function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("")
+    const navigate = useNavigate()
   // Create form instance
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -53,12 +54,25 @@ export function Login() {
   const onSubmit = async (values) => {
     setLoading(true);
     setError("");
-
+  
     try {
-      const response = await axios.post("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/auth/login", values);
-
-      console.log("Login successful:", response.data);
-      // Handle login success (e.g., save token, redirect user)
+      const response = await axios.post(
+        "http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/auth/login",
+        values
+      );
+  
+      // Extract token from response
+      const token = response.data.data.access_token;
+  
+      if (token) {
+        // Store token in localStorage
+        localStorage.setItem("token", token);
+  
+        // Redirect user after successful login
+        navigate("/accounts/agent/transactions");
+      } else {
+        throw new Error("Token not received.");
+      }
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed. Try again.");
@@ -66,6 +80,7 @@ export function Login() {
       setLoading(false);
     }
   };
+  
 
   return (
     <Form  {...form}>

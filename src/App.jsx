@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import Home from "./Pages/home";
 import Transactions from "./Pages/admin/Agents/transactions";
@@ -13,13 +13,18 @@ import { AuthProvider } from "./AuthContext";
 import { Login } from "./Pages/login";
 
 function App() {
+  const token = localStorage.getItem("token");
+
   return (
     <AuthProvider>
       <div className="font-sans">
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login/>}/>
+            <Route
+              path="/login"
+              element={token ? <Navigate to="/accounts/agent/transactions" replace /> : <Login />}
+            />
             {/* Protect all routes starting with /accounts */}
             <Route
               path="/accounts/*"
