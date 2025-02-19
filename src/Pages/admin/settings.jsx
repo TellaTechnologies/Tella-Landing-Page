@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/adminLayout';
 import { ArrowRight, ArrowUp, Filter, RefreshCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -26,13 +26,60 @@ import axios from 'axios';
 function settings() {
     const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
+    const token = localStorage.getItem("token")
+    const [Users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [status, setStatus]= useState([])
+
+        useEffect(() => {
+            const fetchUsers = async () => {
+                try {
+                    // Fetch users first
+                    const response1 = await axios.get(
+                        "http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users",
+                        {
+                            headers: {
+                                'Authorization': 'Bearer ' + token, // Ensure token is available
+                            }
+                        }
+                    );
+        
+                    // Extract user data
+                    const data = response1.data.data || [];
+                    setUsers(data);
+        
+                    // Get the first user's ID (or another logic based on your needs)
+                        const userid = data[0].userId; // Ensure this matches your API response structure
+                        console.log(userid)
+                        // Now update user status
+                        const response2 = await axios.put(
+                            `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${userid}/status?statusType=PENDING`,
+                            {},
+                            {
+                                headers: {
+                                    'Authorization': 'Bearer ' + token,
+                                    "Content-Type": "application/json",
+                                }
+                            }
+                        );
+                        console.log("Status Update Response:", response2.data.data);
+                        const status = response2.data?.data.approvalStatus
+                        console.log(status)
+                        setStatus(status)        
+                    setLoading(false);
+                } catch (error) {
+                    console.log(error);
+                    setUsers([]);
+                }
+            };
+        
+            fetchUsers();
+        }, [token]); // Only run when token changes
+        
 
     // api url
-    // axios.post("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/", {
 
-    // })
-
-    const invoices= []
+   
     return (
         <div>
             {
@@ -155,25 +202,48 @@ function settings() {
                             </div>
                         </div>
                         <Table>
-                            <TableCaption>No Registered Users Yet.</TableCaption>
-                            <TableHeader>
-                                <TableRow className="bg-[#f3f4f680]">
-                                    <TableHead className="w-[60%]">User</TableHead>
-                                    <TableHead>Role</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                                    <TableCell>{invoice.paymentStatus}</TableCell>
-                                    <TableCell>{invoice.paymentMethod}</TableCell>
-                                    <TableCell className="text-right">{invoice.totalAmount}</TableCell>
-                                </TableRow>
-                                ))}
-                            </TableBody>
+                            { Users == [] ? 
+                                <TableCaption>No Registered Users Yet.</TableCaption> :
+                                // <div>
+                                    <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-[#f3f4f680]">
+                                            <TableHead className="w-[60%]">User</TableHead>
+                                            <TableHead>Role</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead className="">Actions</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {loading ? (
+                                             <tr>
+                                                <td colSpan="4" className="text-center py-4">
+                                                    <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                                    </svg>
+                                                </td>
+                                            </tr>
+                                        ) : Users.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="4" className="text-center text-gray-500">
+                                                    No users created yet.
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            Users.map((user, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell className="font-medium md:text-[16px] text-[14px]">{user.username}</TableCell>
+                                                    <TableCell>{user.role.toLowerCase()}</TableCell>
+                                                    <TableCell>{status.toLowerCase()}</TableCell>
+                                                    <TableCell className="text-right">{user.totalAmount}</TableCell>
+                                                </TableRow>
+                                            ))
+                                        )}
+                                    </TableBody>
+                                    </Table>
+                                // </div>                           
+                            }
                         </Table>
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 w-[100%] h-[350px] md:h-[249px] border border-none rounded-3xl'>

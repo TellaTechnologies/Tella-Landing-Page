@@ -126,7 +126,7 @@ export function Login() {
 
         {/* Submit Button */}
         <Button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Submit"}
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </form>
     </Form>
