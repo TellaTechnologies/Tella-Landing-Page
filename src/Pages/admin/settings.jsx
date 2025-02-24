@@ -23,14 +23,41 @@ import Error from '../../assets/image/error.svg'
 import Checkbox from "../../assets/image/Checkboxes.svg"
 import {Switch} from '@/components/ui/switch'
 import axios from 'axios';
+import Delete from '../../assets/image/delete.svg'
+import Write from '../../assets/image/button.svg'
+
+const ITEMS_PER_PAGE = 4; // Number of items per page
+
 function settings() {
-    const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
+    const [view, setView] = useState('user'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
     const token = localStorage.getItem("token")
     const [Users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [status, setStatus]= useState([])
+    const [color, setColor] = useState()
+    const [currentPage, setCurrentPage] = useState(0);
+    const [userImage, setUserImage] = useState(""); // Store the image URL
+    const [number, setPNumber ]= useState("")
+    const [userset, SetUsersSet] = useState(false)
+    const [delset, SetDelsSet] = useState(true)
 
+    const startIndex = currentPage * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const paginatedUsers = Users.slice(startIndex, endIndex);
+
+    // Handle Next and Previous
+    const nextPage = () => {
+        if (endIndex < Users.length) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
         useEffect(() => {
             const fetchUsers = async () => {
                 try {
@@ -50,7 +77,7 @@ function settings() {
         
                     // Get the first user's ID (or another logic based on your needs)
                         const userid = data[0].userId; // Ensure this matches your API response structure
-                        console.log(userid)
+                        // console.log(userid)
                         // Now update user status
                         const response2 = await axios.put(
                             `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${userid}/status?statusType=PENDING`,
@@ -63,9 +90,18 @@ function settings() {
                             }
                         );
                         console.log("Status Update Response:", response2.data.data);
-                        const status = response2.data?.data.approvalStatus
-                        console.log(status)
-                        setStatus(status)        
+                        const status = response2.data.data.approvalStatus
+                        const UserImage = response2.data.data.profile.selfieImage
+                        const Pnumber = response2.data.data.phoneNumber
+                        if(status =="pending"){
+                            setColor(false)
+                        } else if(status== "active"){
+                            setColor(true)
+                        }
+                        // console.log(status)
+                        setStatus(status)     
+                        setUserImage(UserImage)   
+                        setPNumber(Pnumber)
                     setLoading(false);
                 } catch (error) {
                     console.log(error);
@@ -77,8 +113,20 @@ function settings() {
         }, [token]); // Only run when token changes
         
 
-    // api url
+        const Edit = (e) => {
+            e.preventDefault();
+            SetUsersSet(true)
+        }
 
+        const DeActiveUser = (e) => {
+            e.preventDefault();
+            SetDelsSet(true)
+        }
+
+        const cancelUser = (e) => {
+            e.preventDefault();
+            SetDelsSet(false)
+        }
    
     return (
         <div>
@@ -189,8 +237,8 @@ function settings() {
                     <div>
                         <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Manage user accounts and permission </p>
                     </div>
-                    <div className='bg-white gap-4 md:p-5 p-4   w-[100%] h-[350px] md:h-[509px] border border-none rounded-3xl'>
-                        <div className='flex gap-3 justify-between'>
+                    <div className='bg-white gap-4 md:p-5 p-4   w-[100%] h-[450px] md:h-[509px] border border-none rounded-3xl'>
+                        <div className='flex gap-3 md:my-2 my-1 justify-between'>
                             <div>
                                 <p  className="m-0 md:text-[20px] text-[16px] font-semibold text-black">User Accounts</p>
                             </div>
@@ -231,23 +279,63 @@ function settings() {
                                                 </td>
                                             </tr>
                                         ) : (
-                                            Users.map((user, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell className="font-medium md:text-[16px] text-[14px]">{user.username}</TableCell>
-                                                    <TableCell>{user.role.toLowerCase()}</TableCell>
-                                                    <TableCell>{status.toLowerCase()}</TableCell>
-                                                    <TableCell className="text-right">{user.totalAmount}</TableCell>
+                                            paginatedUsers.map((user, index) => (
+                                                <TableRow key={index} className="my-2">
+                                                    <TableCell className="font-medium md:text-[16px] text-[14px] p-4">
+                                                        <div className='flex md:gap-3 items-center'>
+                                                            <div>
+                                                                <img src={userImage} alt="" loading='true' className='w-[32px] h-[32px] rounded-full'/>
+                                                            </div>
+                                                            <div>
+                                                                <div>
+                                                                    <p className="m-0 md:text-[15px] lg:text-[16px] text-[14px]">{user.username}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-sm text-gray-400 m-0">{number}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div></TableCell>
+                                                    <TableCell className="p-4 capitalize">{user.role.toLowerCase()}</TableCell>
+                                                    <TableCell className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${color ? "bg-[#DCFCE7]" : "bg-[#f3c7a8] text-[#E8731F]"}`}>
+                                                        {status.toLowerCase()}
+                                                    </TableCell>
+                                                    <TableCell colSpan="3" className="text-right">
+                                                        <div className='flex justify-start gap-2'>
+                                                            <Link onClick={(e) => Edit(e)} className='outline-none'>
+                                                                <img src={Write} alt="editIcon" />
+                                                            </Link>
+                                                            <Link onClick={(e) => DeActiveUser(e)} className='outline-none'>
+                                                                <img src={Delete} alt="deleteIcon" />
+                                                            </Link>
+                                                        </div>                                                  
+                                                    </TableCell>
                                                 </TableRow>
                                             ))
-                                        )}
+                                            
+                                        )}                                      
                                     </TableBody>
+                                       
                                     </Table>
                                 // </div>                           
                             }
-                        </Table>
+                        </Table> 
+                        <div className='flex md:my-3 my-2 w-[100%] justify-between items-center'>
+                            <div>
+                                <p className="m-0 text-[#282828] opacity-[40%]">Showing 1 to 2 of 30 entries</p>
+                            </div>
+                            <div className='gap-3 flex'>
+                                <Link onClick={() => prevPage()} className='border px-5 text-[#282828] opacity-[60%]'>
+                                    Previous
+                                </Link>
+                                <Link onClick={() => nextPage()} className='border px-5 text-[#282828] opacity-[60%]'>
+                                    Next
+                                </Link>
+                            </div>
+                        </div>                        
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 w-[100%] h-[350px] md:h-[249px] border border-none rounded-3xl'>
-                        <div>
+                        <div>.
+
                             <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Assign Sales Officer </p>
                         </div>
                         <div className='sm:flex md:mb-0 mb-4 justify-between gap-3'>
@@ -264,6 +352,64 @@ function settings() {
                             <Button type="button"  className="bg-[#2097CF]  text-white w-[30%] md:p-4">Assign</Button>
                         </div>
                     </div>
+                    {userset &&<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+                        <div className="bg-white w-[300px] h-[450px] lg:w-[553px] md:px-9 px-5 lg:h-[474px] p-4 rounded-lg shadow-lg relative">
+                            <form onSubmit="">
+                                <div className='flex items-center justify-between'>
+                                    <div>
+                                        <p className="m-0 text-[#282828] opacity-[60%] md:text-[22px] text-[18px]">Edit</p>
+                                    </div>
+                                    <div>
+                                        <Link className="md:text-[22px] text-[18px] text-blue-500">
+                                            Save
+                                        </Link>
+                                    </div>                                    
+                                </div>
+                                <div className='md:my-5 my-4'>
+                                    <label className='text-[#282828] opacity-[60%] ' htmlFor="username">User</label>
+                                    <Input id="username" type='username' className='p-8 md:text-[16px] text-[14px]'/>
+                                </div>
+                                <div className='md:my-3 my-2'>
+                                    <label className='text-[#282828] opacity-[60%] ' htmlFor="role">Role</label>
+                                    <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option selected value="admin">Admin</option>
+                                        <option value="agent">Agent</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className='text-[#282828] opacity-[60%] ' htmlFor="status">Status</label>
+                                    <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option selected value="active">Active</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="inactve">Inactive</option>
+                                    </select>
+                                </div>
+                            </form>                            
+                        </div>
+                    </div>}
+                    {delset &&<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+                        <div className="bg-white md:w-[350px] w-[300px] h-[300px] lg:w-[553px] md:px-9 px-5 lg:h-[304px] p-4 rounded-lg shadow-lg relative">
+                            <form onSubmit="">
+                                <div className='flex items-center justify-center'>
+                                    <div>
+                                        <p className="m-0 text-[#282828] opacity-[60%] md:text-[22px] text-[18px]">De-activate</p>
+                                    </div>
+                                </div>
+                                <div className='md:my-5 my-4'>
+                                    <p className="m-0 md:text-[24px] text-[20px] text-center">Are you sure you want to deactivate John Doe (9165448290)</p>
+                                </div>
+                                <div className='flex md:mt-12 mt-8 items-center md:gap-3 gap-2 justify-center'>
+                                    <div>
+                                        <button className='md:py-2 text-white py-2 rounded-md bg-[#2097CF] md:px-7 px-3'>De-activate</button>
+                                    </div>
+                                    <div>
+                                        <button onClick={(e) => cancelUser(e)} className='md:px-5 px-3 rounded-md  py-2 border bg-white'>Cancel</button>
+                                    </div>
+                                </div>                               
+                            </form>                            
+                        </div>
+                    </div>}
                 </AdminLayout>  
             )} 
             { 
@@ -409,14 +555,14 @@ function settings() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {invoices.map((invoice) => (
+                                    {/* {invoices.map((invoice) => (
                                     <TableRow key={invoice.invoice}>
                                         <TableCell className="font-medium">{invoice.invoice}</TableCell>
                                         <TableCell>{invoice.paymentStatus}</TableCell>
                                         <TableCell>{invoice.paymentMethod}</TableCell>
                                         <TableCell className="text-right">{invoice.totalAmount}</TableCell>
                                     </TableRow>
-                                    ))}
+                                    ))} */}
                                 </TableBody>
                             </Table>                        
                         </div>
