@@ -25,22 +25,25 @@ import {Switch} from '@/components/ui/switch'
 import axios from 'axios';
 import Delete from '../../assets/image/delete.svg'
 import Write from '../../assets/image/button.svg'
+import Padlock from '../../assets/image/padlock.svg'
+import Key from '../../assets/image/key.svg'
+import ErrorOne from '../../assets/image/error1.svg'
 
 const ITEMS_PER_PAGE = 4; // Number of items per page
 
 function settings() {
-    const [view, setView] = useState('user'); // 'admin', 'user', 'transactions'
+    const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
     const token = localStorage.getItem("token")
     const [Users, setUsers] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [status, setStatus]= useState([])
     const [color, setColor] = useState()
     const [currentPage, setCurrentPage] = useState(0);
     const [userImage, setUserImage] = useState(""); // Store the image URL
     const [number, setPNumber ]= useState("")
     const [userset, SetUsersSet] = useState(false)
-    const [delset, SetDelsSet] = useState(true)
+    const [delset, SetDelsSet] = useState(false)
 
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -80,7 +83,7 @@ function settings() {
                         // console.log(userid)
                         // Now update user status
                         const response2 = await axios.put(
-                            `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${userid}/status?statusType=PENDING`,
+                            `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${userid}/status?statusType=APPROVED`,
                             {},
                             {
                                 headers: {
@@ -126,8 +129,7 @@ function settings() {
         const cancelUser = (e) => {
             e.preventDefault();
             SetDelsSet(false)
-        }
-   
+        }   
     return (
         <div>
             {
@@ -191,7 +193,7 @@ function settings() {
                             <div>
                                 <p className="m-0 'text-[#282828]  opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">Configure 2FA and password policies </p>
                             </div>
-                            <Link className='flex md:mt-4 mt-5 items-center gap-2'>
+                            <Link onClick={()=> setView("security")} className='flex md:mt-4 mt-5 items-center gap-2'>
                                 <div>
                                     <p className="text-[#2097CF] m-0">Security Settings</p>
                                 </div>
@@ -615,6 +617,186 @@ function settings() {
                     </AdminLayout>
                 )
             }
+            {
+                view === 'security' && (
+                <AdminLayout  title={"System Settings"}>
+                    <div>
+                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">System Security</p>
+                    </div>
+                    <div className='bg-white gap-4 md:p-5 p-4 w-[100%] h-[350px] md:h-[284px] border border-none rounded-3xl'>
+                        <div className="p"><p className="m-0 text-[#282828] text-[18px] font-semibold">Platform Security</p></div>
+                        <div className='border md:my-0 my-2   rounded-xl md:mt-7'>
+                            <div className='md:flex items-center mx-4 gap-3 md:p-4 '>
+                                <div className='md:my-0 my-3'>
+                                    <img src={Padlock} alt="" />
+                                </div>
+                                <div>
+                                    <p className="m-0 font-medium md:text-[16px] text-[14px]">
+                                        Password Reset
+                                    </p>
+                                    <p className="m-0 md:pb-0 pb-3 text-[13px] text-[#6B7280]">Password reset required for a new password</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='border  rounded-xl md:mt-4'>
+                            <div className="flex sm:items-center items-baseline justify-between  mx-4">
+                                <div className='md:flex items-center gap-3 md:p-4 '>
+                                    <div className='md:my-0 my-3'>
+                                        <img src={Key} alt="key-img" />
+                                    </div>
+                                    <div>
+                                        <p className="m-0 font-medium md:text-[16px] text-[14px]">
+                                            Password Policy
+                                        </p>
+                                        <p className="m-0 md:pb-0 pb-3 text-[13px] text-[#6B7280]">Manage password requirements and expiration</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <Link className='text-[#2563EB] text-[14px] md:text-[16px] '>Configure</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div className='bg-white gap-4 md:p-5 p-4 mt-3 w-[100%] h-[200px] md:h-[245px] border border-none rounded-3xl'> 
+                            <div>
+                                <p className="m-0 md:text-[20px] text-[18px] font-semibold">Activity Log</p>                                
+                            </div>
+                            <Table className="md:mt-5">
+                                { Users == [] ? 
+                                    <TableCaption className="w-[100%] ">No Registered Users Yet.</TableCaption> :
+                                    // <div>
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow className="bg-[#f3f4f680]">
+                                                    <TableHead className="w-[20%] md:text-[14px] text-[12px]">Activity</TableHead>
+                                                    <TableHead className="md:text-[14px] text-[12px]">IP Address</TableHead>
+                                                    <TableHead className="md:text-[14px] text-[12px]">Location</TableHead>
+                                                    <TableHead className="md:text-[14px] text-[12px]">Date</TableHead>
+                                                    <TableHead className="md:text-[14px] text-[12px]">Status</TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {loading == false ? (
+                                                    <tr>
+                                                        <td colSpan="5" className="text-center py-4">
+                                                            <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
+                                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                                            </svg>
+                                                        </td>
+                                                    </tr>
+                                                ) : Users.length === 0 ? (
+                                                    <tr>
+                                                        <td colSpan="5" className="text-center text-gray-500">
+                                                            No users created yet.
+                                                        </td>
+                                                    </tr>
+                                                ) : (
+                                                    paginatedUsers.map((user, index) => (
+                                                        <TableRow key={index} className="my-2">
+                                                            {/* <TableCell className="font-medium md:text-[16px] text-[14px] p-4">
+                                                                <div className='flex md:gap-3 items-center'>
+                                                                    <div>
+                                                                        <img src={userImage} alt="" loading='true' className='w-[32px] h-[32px] rounded-full'/>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div>
+                                                                            <p className="m-0 md:text-[15px] lg:text-[16px] text-[14px]">{user.username}</p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-sm text-gray-400 m-0">{number}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div></TableCell>
+                                                            <TableCell className="p-4 capitalize">{user.role.toLowerCase()}</TableCell> */}
+                                                            {/* <TableCell className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${color ? "bg-[#DCFCE7]" : "bg-[#f3c7a8] text-[#E8731F]"}`}>
+                                                                {status.toLowerCase()}
+                                                            </TableCell>
+                                                            <TableCell colSpan="3" className="text-right">
+                                                                <div className='flex justify-start gap-2'>
+                                                                    <Link onClick={(e) => Edit(e)} className='outline-none'>
+                                                                        <img src={Write} alt="editIcon" />
+                                                                    </Link>
+                                                                    <Link onClick={(e) => DeActiveUser(e)} className='outline-none'>
+                                                                        <img src={Delete} alt="deleteIcon" />
+                                                                    </Link>
+                                                                </div>                                                  
+                                                            </TableCell> */}
+                                                        </TableRow>
+                                                    ))
+                                                    
+                                                )}                                      
+                                            </TableBody>
+                                        </Table>
+                                    // </div>                           
+                                }
+                            </Table> 
+                        </div>
+                    </div>
+                    <div className='bg-white gap-4 md:p-5 p-4 w-[100%] h-[400px] md:h-[282px] border border-none rounded-3xl'>
+                        <div className='md:flex justify-between mx-3'>
+                            <div>
+                                <p className="m-0 text-[#282828] font-semibold md:text-[18px] text-[16px]">Blocked Accounts</p>
+                            </div>
+                            <div>
+                                <div className='flex items-center justify-between gap-3'>
+                                    <div>
+                                        <Link className='text-[#2563EB] font-semibold md:text-[16px] '>See all</Link>
+
+                                    </div>
+                                    <div className='border rounded-md flex items-center justify-between gap-2 py-2 px-3'>
+                                        <div>
+                                            +
+                                        </div>
+                                        <div>
+                                            Add to Blacklist
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='border md:my-0 my-4  rounded-xl md:mt-4'>
+                            <div className="flex items-end sm:items-center justify-between  mx-4">
+                                <div className='flex items-center gap-3 md:p-4 '>
+                                    <div className='md:my-0 my-3'>
+                                        <img src={ErrorOne} alt="key-img" />
+                                    </div>
+                                    <div>
+                                        <p className="m-0 font-medium md:text-[16px] text-[14px]">
+                                            09165448290
+                                        </p>
+                                        <p className="m-0 text-[#6B7280]">Blocked on Jan 10, 2025</p>
+                                        {/* Fetched Date of Account Disclosed */}
+                                    </div>
+                                </div>
+                                <div>
+                                    <Link className='text-[#ff1000] text-[14px] md:text-[16px] '>Unblock</Link>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div className='border  rounded-xl md:mt-4'>
+                            <div className="flex items-end sm:items-center justify-between  mx-4">
+                                <div className='flex items-center gap-3 md:p-4 '>
+                                    <div className='md:my-0 my-3'>
+                                        <img src={ErrorOne} alt="key-img" />
+                                    </div>
+                                    <div>
+                                        <p className="m-0 font-medium md:text-[16px] text-[14px]">
+                                            09165448290
+                                        </p>
+                                        <p className="m-0 text-[#6B7280]">Blocked on Jan 10, 2025</p>
+                                        {/* Fetched Date of Account Disclosed */}
+                                    </div>
+                                </div>
+                                <div>
+                                    <Link className='text-[#ff1000] text-[14px] md:text-[16px] '>Unblock</Link>
+                                </div>
+                            </div>
+                        </div>                                               
+                    </div>
+                </AdminLayout>
+            )}
         </div>
     );
 }

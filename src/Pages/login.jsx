@@ -70,7 +70,8 @@ export function Login() {
   
         // Redirect user after successful login
         navigate("/accounts/agent/transactions");
-      } else {
+      } else if(token=="undefined") {
+        console.log("undefined")
         throw new Error("Token not received.");
       }
     } catch (err) {
