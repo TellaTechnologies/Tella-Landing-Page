@@ -14,6 +14,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
     const [Trans, TransactionsDropD] = useState(false)
+    // cons 
 
     const Logout =(e) => {
         e.preventDefault()

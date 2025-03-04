@@ -34,10 +34,10 @@ export default function AdminLayout({ children, title, SetAgentProfile }) {
       <SidebarInset className=" md:h-[500px] md:overflow-y-scroll"> 
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
           <div className="flex justify-start items-center gap-3">
-            <Menu onClick={() => setNavDisplay(prevState => !prevState)} size={30} className="text-black" />
+            <Menu onClick={() => setNavDisplay(true)} size={30} className="text-black" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
-              <BreadcrumbList className="flex justify-between">
+              <BreadcrumbList className="flex justify-between">  
                 <BreadcrumbItem className="md:block">
                   <BreadcrumbLink className="font-[800] text-black" href="#">
                     <h2 className="lg:text-[24px] md:text-[20px] text-[18px]">{title}</h2>         
@@ -63,7 +63,7 @@ export default function AdminLayout({ children, title, SetAgentProfile }) {
             </div>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 bg-[#afe6ff]">
+        <div className="flex flex-1 flex-col gap-4 p-4 bg-[#2097CF] bg-opacity-[20%]">
           {children}
         </div>
       </SidebarInset>

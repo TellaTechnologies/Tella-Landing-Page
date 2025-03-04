@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/adminLayout';
 import { ArrowRight, ArrowUp, Filter, RefreshCcw } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { data, Link } from 'react-router-dom';
 import MagnifyingGlass from '../../assets/image/magnifyinglass2.svg'
 import FrameThree from '../../assets/image/Frame3.svg'
 import RectangleOne from '../../assets/image/Rectangle.svg'
@@ -44,10 +44,17 @@ function settings() {
     const [number, setPNumber ]= useState("")
     const [userset, SetUsersSet] = useState(false)
     const [delset, SetDelsSet] = useState(false)
-
+    const [stats, setStats] = useState("")
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const paginatedUsers = Users.slice(startIndex, endIndex);
+    const [selectUser, setSelectedUserId]= useState()
+    const [setPasswordpage, inputPnumber] = useState(false)
+    const [OtpPhoneNumber, setOtpPhoneNumber] = useState()
+    const [otpPage, setOtpPage] = useState(false)
+    const [timeLeft, setTimeLeft] = useState(31); // Start from 30s
+    const [isTimerActive, setIsTimerActive] = useState(false);
+
 
     // Handle Next and Previous
     const nextPage = () => {
@@ -61,82 +68,178 @@ function settings() {
             setCurrentPage(currentPage - 1);
         }
     };
-        useEffect(() => {
-            const fetchUsers = async () => {
-                try {
-                    // Fetch users first
-                    const response1 = await axios.get(
-                        "http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users",
-                        {
-                            headers: {
-                                'Authorization': 'Bearer ' + token, // Ensure token is available
-                            }
-                        }
-                    );
         
-                    // Extract user data
-                    const data = response1.data.data || [];
-                    setUsers(data);
-        
-                    // Get the first user's ID (or another logic based on your needs)
-                        const userid = data[0].userId; // Ensure this matches your API response structure
-                        // console.log(userid)
-                        // Now update user status
-                        const response2 = await axios.put(
-                            `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${userid}/status?statusType=APPROVED`,
-                            {},
-                            {
-                                headers: {
-                                    'Authorization': 'Bearer ' + token,
-                                    "Content-Type": "application/json",
-                                }
-                            }
-                        );
-                        console.log("Status Update Response:", response2.data.data);
-                        const status = response2.data.data.approvalStatus
-                        const UserImage = response2.data.data.profile.selfieImage
-                        const Pnumber = response2.data.data.phoneNumber
-                        if(status =="pending"){
-                            setColor(false)
-                        } else if(status== "active"){
-                            setColor(true)
-                        }
-                        // console.log(status)
-                        setStatus(status)     
-                        setUserImage(UserImage)   
-                        setPNumber(Pnumber)
-                    setLoading(false);
-                } catch (error) {
-                    console.log(error);
-                    setUsers([]);
+
+const setManageForUsers = async (event) => {
+    event.preventDefault();
+    setView("user");
+    setLoading(true);
+
+    try {
+        // Fetch users
+        const response1 = await axios.get(
+            "http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users",
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
                 }
-            };
-        
-            fetchUsers();
-        }, [token]); // Only run when token changes
-        
+            }
+        );
 
-        const Edit = (e) => {
-            e.preventDefault();
-            SetUsersSet(true)
+        const data = response1.data.data || [];
+        setUsers(data);
+
+        if (data.length > 0) {
+            const firstUser = data[0];
+
+            setStats(firstUser.approvalStatus || "PENDING");
+            setUserImage(firstUser.profile?.selfieImage || "");
+            setPNumber(firstUser.phoneNumber || "");
+
+            // ✅ Set color based on firstUser.approvalStatus
+            if (firstUser.approvalStatus.toLowerCase() === "approved") {
+                setColor(true);
+            } else if (firstUser.approvalStatus.toLowerCase() === "pending") {
+                setColor(false);
+            } else {
+                setColor(""); // Default case
+            }
         }
 
-        const DeActiveUser = (e) => {
-            e.preventDefault();
-            SetDelsSet(true)
+        setLoading(false);
+    } catch (error) {
+        console.log(error);
+        setUsers([]);
+        setLoading(false);
+    }
+};
+
+
+const Edit = (e, userids) => {
+    e.preventDefault();
+    SetUsersSet(true)    
+    setSelectedUserId(userids); // Store the clicked user's ID
+
+}
+
+
+const handleSubmit= async (e, data) =>{
+     e.preventDefault();
+        setStats(e.target.value)
+        // Now update user status
+        if (!selectUser) {
+    console.error("No user selected for updating status.");
+    return;
         }
 
-        const cancelUser = (e) => {
-            e.preventDefault();
-            SetDelsSet(false)
-        }   
+        // Find the selected user from state
+        const selectedUser = Users.find(user => user.userId === selectUser);
+        if (!selectedUser) {
+    console.error("User not found in the list.");
+    return;
+        }
+
+        try {
+    console.log("Updating user:", selectedUser);
+
+    const response2 = await axios.put(
+        `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${selectUser}/status?statusType=${stats}`,
+        {},
+        {
+    headers: {
+        'Authorization': 'Bearer ' + token,
+        "Content-Type": "application/json",
+    }
+        }
+    );
+
+    console.log("Status Update Response:", response2.data.data);
+    const updatedUser = response2.data.data;
+
+    // Update state with new user details
+    setStatus(updatedUser.approvalStatus || "PENDING");
+    setUserImage(updatedUser.profile?.selfieImage || "");
+    setPNumber(updatedUser.phoneNumber || "");
+
+    setUsers(prevUsers =>
+        prevUsers.map(user =>
+            user.userId === selectUser
+                ? { ...user, approvalStatus: updatedUser.approvalStatus }
+                : user
+        )
+    );
+    // Close the form/modal
+    SetUsersSet(false);
+        } catch (error) {
+    console.log(error);
+    SetUsersSet(false)
+        }
+};
+const inputPnumberSet = () => {
+    inputPnumber(true)
+    setView("")
+}
+
+const DeActiveUser = (e) => {
+    e.preventDefault();
+    SetDelsSet(true)
+}
+
+const cancelUser = (e) => {
+    e.preventDefault();
+    SetDelsSet(false)
+}  
+
+
+useEffect(() => {
+    if (!isTimerActive) return; // Don't start if timer is inactive
+
+    if (timeLeft <= 0) {
+        setIsTimerActive(false); // Stop timer when it reaches 0
+        return;
+    }
+
+    const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+}, [timeLeft, isTimerActive]);
+
+const handleOtp =  async (e) => {
+e.preventDefault();
+setLoading(true)
+setIsTimerActive(true);
+
+try {
+    const responseOtp = await axios.post(`http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/verification-unauthenticated?phoneNumber=${OtpPhoneNumber}`, {},
+        { 
+            headers:{
+                "Content-Type": "application/json",
+            }
+        }
+    )
+    
+    if (responseOtp.status === 200) { // Axios returns status, not `ok`
+        inputPnumber(false)
+        setOtpPage(true)
+        setView("")
+    }
+    console.log(responseOtp)
+} catch (error) {
+    console.log(error) 
+}
+finally {
+    setLoading(false); // Ensure loading is turned off after success or error
+}
+} 
     return (
         <div>
             {
                 view === 'admin' && (
                 <AdminLayout  title={"System Admin Settings"}>
                     <div>
-                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">User Management</p>
+                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">User Management</p>
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 md:flex  items-center justify-center w-[100%] h-[350px] md:h-[249px] border border-none rounded-3xl'>
                         <div className="md:w-[500px] md:p-5 p-4 md:h-[171px] border-2 rounded-md">
@@ -144,7 +247,7 @@ function settings() {
                             <div>
                                 <p className="m-0 'text-[#282828] opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">View, edit and deactivate user accounts </p>
                             </div>
-                            <Link onClick={()=> setView("user")} className='flex md:mt-4 mt-5 items-center gap-2'>
+                            <Link onClick={(event)=> setManageForUsers(event)} className='flex md:mt-4 mt-5 items-center gap-2'>
                                 <div>
                                     <p className="text-[#2097CF] m-0">Manage Users</p>
                                 </div>
@@ -169,7 +272,7 @@ function settings() {
                         </div>
                     </div>
                     <div>
-                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Transaction Management</p>
+                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">Transaction Management</p>
                         <div className='bg-white gap-4 md:p-5 p-4 md:flex mt-3  items-center justify-center w-[100%] h-[200px] md:h-[200px] border border-none rounded-3xl'>
                             <div className='border-2 md:p-5 p-4 md:w-[100%] md:h-[140px] rounded-md'>
                                 <p className="m-0 md:text-[20px] text-[18px] font-semibold">All Transactions</p>
@@ -237,12 +340,12 @@ function settings() {
                 view === 'user' && (
                 <AdminLayout title={"User Management"}>
                     <div>
-                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Manage user accounts and permission </p>
+                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">Manage user accounts and permission </p>
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4   w-[100%] h-[450px] md:h-[509px] border border-none rounded-3xl'>
                         <div className='flex gap-3 md:my-2 my-1 justify-between'>
                             <div>
-                                <p  className="m-0 md:text-[20px] text-[16px] font-semibold text-black">User Accounts</p>
+                                <p  className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">User Accounts</p>
                             </div>
                             <div>
                                 <div className="border rounded-[10px] gap-3 justify-center hidden lg:flex items-center p-2">
@@ -252,75 +355,65 @@ function settings() {
                             </div>
                         </div>
                         <Table>
-                            { Users == [] ? 
-                                <TableCaption>No Registered Users Yet.</TableCaption> :
-                                // <div>
-                                    <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-[#f3f4f680]">
-                                            <TableHead className="w-[60%]">User</TableHead>
-                                            <TableHead>Role</TableHead>
-                                            <TableHead>Status</TableHead>
-                                            <TableHead className="">Actions</TableHead>
+                            <TableCaption>
+                                {/* {Users.length === 0 ? "No Registered Users Yet." : ""} */}
+                            </TableCaption>
+                            <TableHeader>
+                                <TableRow className="bg-[#f3f4f680]">
+                                    <TableHead className="w-[60%]">User</TableHead>
+                                    <TableHead>Role</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {loading ? (
+                                    <TableRow>
+                                        <TableCell colSpan="4" className="text-center py-4">
+                                            <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                            </svg>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : Users.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan="4" className="text-center text-gray-500">
+                                            No users created yet.
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    paginatedUsers.map((user, index) => (
+                                        <TableRow  key={index} className="my-2">
+                                            <TableCell className="font-medium md:text-[16px] text-[14px] p-4">
+                                                <div className='flex md:gap-3 items-center'>
+                                                    <img src={userImage} alt="" loading='true' className='w-[32px] h-[32px] rounded-full'/>
+                                                    <div>
+                                                        <p className="m-0 md:text-[15px] lg:text-[16px] text-[14px]">{user.username}</p>
+                                                        <p className="text-sm text-gray-400 m-0">{number}</p>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="p-4 capitalize">{user.role.toLowerCase()}</TableCell>
+                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${color === true ? "bg-[#DCFCE7]" : color === false ? "bg-[#f3c7a8] text-[#E8731F]" : "bg-transparent"}`}>
+                                                {user.approvalStatus.toLowerCase()}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <div className='flex justify-start gap-2'>
+                                                    <Link onClick={(e) => Edit(e, user.userId)} className='outline-none'>   
+                                                        <img src={Write} alt="editIcon" />
+                                                    </Link>
+                                                    <Link onClick={(e) => DeActiveUser(e)} className='outline-none'>
+                                                        <img src={Delete} alt="deleteIcon" />
+                                                    </Link>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {loading ? (
-                                             <tr>
-                                                <td colSpan="4" className="text-center py-4">
-                                                    <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
-                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                                                    </svg>
-                                                </td>
-                                            </tr>
-                                        ) : Users.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="4" className="text-center text-gray-500">
-                                                    No users created yet.
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            paginatedUsers.map((user, index) => (
-                                                <TableRow key={index} className="my-2">
-                                                    <TableCell className="font-medium md:text-[16px] text-[14px] p-4">
-                                                        <div className='flex md:gap-3 items-center'>
-                                                            <div>
-                                                                <img src={userImage} alt="" loading='true' className='w-[32px] h-[32px] rounded-full'/>
-                                                            </div>
-                                                            <div>
-                                                                <div>
-                                                                    <p className="m-0 md:text-[15px] lg:text-[16px] text-[14px]">{user.username}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-sm text-gray-400 m-0">{number}</p>
-                                                                </div>
-                                                            </div>
-                                                        </div></TableCell>
-                                                    <TableCell className="p-4 capitalize">{user.role.toLowerCase()}</TableCell>
-                                                    <TableCell className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${color ? "bg-[#DCFCE7]" : "bg-[#f3c7a8] text-[#E8731F]"}`}>
-                                                        {status.toLowerCase()}
-                                                    </TableCell>
-                                                    <TableCell colSpan="3" className="text-right">
-                                                        <div className='flex justify-start gap-2'>
-                                                            <Link onClick={(e) => Edit(e)} className='outline-none'>
-                                                                <img src={Write} alt="editIcon" />
-                                                            </Link>
-                                                            <Link onClick={(e) => DeActiveUser(e)} className='outline-none'>
-                                                                <img src={Delete} alt="deleteIcon" />
-                                                            </Link>
-                                                        </div>                                                  
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))
-                                            
-                                        )}                                      
-                                    </TableBody>
-                                       
-                                    </Table>
-                                // </div>                           
-                            }
-                        </Table> 
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+
                         <div className='flex md:my-3 my-2 w-[100%] justify-between items-center'>
                             <div>
                                 <p className="m-0 text-[#282828] opacity-[40%]">Showing 1 to 2 of 30 entries</p>
@@ -338,7 +431,7 @@ function settings() {
                     <div className='bg-white gap-4 md:p-5 p-4 w-[100%] h-[350px] md:h-[249px] border border-none rounded-3xl'>
                         <div>.
 
-                            <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Assign Sales Officer </p>
+                            <p className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">Assign Sales Officer </p>
                         </div>
                         <div className='sm:flex md:mb-0 mb-4 justify-between gap-3'>
                             <div className="md:my-6  w-[100%] gap-1.5">
@@ -354,42 +447,42 @@ function settings() {
                             <Button type="button"  className="bg-[#2097CF]  text-white w-[30%] md:p-4">Assign</Button>
                         </div>
                     </div>
-                    {userset &&<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+                    {userset ?<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
                         <div className="bg-white w-[300px] h-[450px] lg:w-[553px] md:px-9 px-5 lg:h-[474px] p-4 rounded-lg shadow-lg relative">
-                            <form onSubmit="">
+                            <form onSubmit={(e) =>handleSubmit(e)}>
                                 <div className='flex items-center justify-between'>
                                     <div>
                                         <p className="m-0 text-[#282828] opacity-[60%] md:text-[22px] text-[18px]">Edit</p>
                                     </div>
                                     <div>
-                                        <Link className="md:text-[22px] text-[18px] text-blue-500">
+                                        <button type='submit'  className="md:text-[22px] text-[18px] text-blue-500">
                                             Save
-                                        </Link>
+                                        </button>
                                     </div>                                    
                                 </div>
                                 <div className='md:my-5 my-4'>
                                     <label className='text-[#282828] opacity-[60%] ' htmlFor="username">User</label>
-                                    <Input id="username" type='username' className='p-8 md:text-[16px] text-[14px]'/>
+                                    <Input required id="username" type='username' className='p-8 md:text-[16px] text-[14px]'/>
                                 </div>
                                 <div className='md:my-3 my-2'>
                                     <label className='text-[#282828] opacity-[60%] ' htmlFor="role">Role</label>
-                                    <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <select required id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                         <option selected value="admin">Admin</option>
                                         <option value="agent">Agent</option>
                                         <option value="user">User</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='text-[#282828] opacity-[60%] ' htmlFor="status">Status</label>
-                                    <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option selected value="active">Active</option>
+                                    <label className='text-[#282828] opacity-[60%] ' htmlFor="stats">Status</label>
+                                    <select required value={stats} onChange={(e) => setStats(e.target.value)} id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option value="approved">Active</option>
                                         <option value="pending">Pending</option>
-                                        <option value="inactve">Inactive</option>
+                                        <option value="suspended">Suspended</option>
                                     </select>
                                 </div>
                             </form>                            
                         </div>
-                    </div>}
+                    </div>: ""}
                     {delset &&<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
                         <div className="bg-white md:w-[350px] w-[300px] h-[300px] lg:w-[553px] md:px-9 px-5 lg:h-[304px] p-4 rounded-lg shadow-lg relative">
                             <form onSubmit="">
@@ -418,7 +511,7 @@ function settings() {
                 view == 'transactions' && (
                     <AdminLayout title={"Transaction Management"}>
                         <div>
-                            <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">Manage user accounts and permission </p>
+                            <p className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">Manage user accounts and permission </p>
                         </div>
                         <div className='flex flex-wrap  justify-center items-center md:justify-between'>
                             <div className='bg-[#fff] md:w-[353px] w-[250px] md:h-[138px] md:p-4  rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-3'>
@@ -532,7 +625,7 @@ function settings() {
                                             <Filter color='#000' size={20}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-black">Filter</p>
+                                            <p className="m-0 text-[#282828]">Filter</p>
                                         </div>
                                     </Button>
                                     <Button className="bg-[#2097CF]">
@@ -608,7 +701,7 @@ function settings() {
                                             <p className="m-0  text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Number of automatic retry attempts</p>
                                         </div>
                                     </div>
-                                    <div className='md:w-[54px] md:h-[35px] flex items-center justify-center font-semibold w-[40px] h-[40px]  text-black md:text-[15px] text-[14px] rounded-lg bg-[#D1D5DB]'>
+                                    <div className='md:w-[54px] md:h-[35px] flex items-center justify-center font-semibold w-[40px] h-[40px]  text-[#282828] md:text-[15px] text-[14px] rounded-lg bg-[#D1D5DB]'>
                                         {num}
                                     </div>
                                 </div>
@@ -621,12 +714,12 @@ function settings() {
                 view === 'security' && (
                 <AdminLayout  title={"System Settings"}>
                     <div>
-                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-black">System Security</p>
+                        <p className="m-0 md:text-[20px] text-[16px] font-semibold text-[#282828]">System Security</p>
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 w-[100%] h-[350px] md:h-[284px] border border-none rounded-3xl'>
                         <div className="p"><p className="m-0 text-[#282828] text-[18px] font-semibold">Platform Security</p></div>
                         <div className='border md:my-0 my-2   rounded-xl md:mt-7'>
-                            <div className='md:flex items-center mx-4 gap-3 md:p-4 '>
+                            <Link onClick={() => inputPnumberSet()} className='md:flex items-center mx-4 gap-3 md:p-4 '>
                                 <div className='md:my-0 my-3'>
                                     <img src={Padlock} alt="" />
                                 </div>
@@ -636,7 +729,7 @@ function settings() {
                                     </p>
                                     <p className="m-0 md:pb-0 pb-3 text-[13px] text-[#6B7280]">Password reset required for a new password</p>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                         <div className='border  rounded-xl md:mt-4'>
                             <div className="flex sm:items-center items-baseline justify-between  mx-4">
@@ -797,6 +890,64 @@ function settings() {
                     </div>
                 </AdminLayout>
             )}
+            {
+                setPasswordpage && 
+                <AdminLayout title={"Reset Password"}>
+                    <div className='flex md:my-10 my-5 items-start justify-center'>
+                        <div>
+                            <div>
+                                <p className="m-0 font-medium text-center text-[#282828] lg:text-[32px] md:text-[28px] text-[24px]">Reset Password</p>
+                            </div>
+                            <form onSubmit={handleOtp}>
+                                <div className="bg-white md:py-5 py-3 lg:w-[749px] md:w-[550px] md:h-[350px] w-[500px] h-[300px] lg:h-[391px] rounded-lg">
+                                    <div className='flex items-center justify-center'>
+                                        <p className="m-0 lg:text-[24px] font-semibold md:text-[22px] text-[20px]">Reset Your Password</p>
+                                    </div>
+                                    <p className="m-0 md:pb-[60px] pb-[30px] text-center font-semibold text-[#282828] opacity-[60%]">Enter the phone number associated with the account to get<br/> code to reset the password</p>
+                                    <div className='flex justify-center'>
+                                        <input className="rounded md:w-[500px] border px-5 py-6" value={OtpPhoneNumber} onChange={(e) => setOtpPhoneNumber(e.target.value)} type="text" placeholder='Phone Number'  />
+                                    </div>
+                                    <div className='flex md:mt-[40px] justify-center'>
+                                        <button type='submit' className='md:px-9 rounded-xl md:py-4 bg-[#2097CF] text-[#fff]'>{loading ? "Generating code" : "Get code"}</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </AdminLayout>
+            }
+            {
+            otpPage && 
+                <AdminLayout title={"Reset Password"}>
+                    <div className='flex md:my-10 my-5 items-start justify-center'>
+                        <div>
+                            <div>
+                                 <p className="m-0 font-medium text-center text-[#282828] lg:text-[32px] md:text-[28px] text-[24px]">Reset Password</p>
+                            </div>
+                            <form onSubmit={handleOtp}>
+                                 <div className="bg-white md:py-5 py-3 lg:w-[749px] md:w-[550px] md:h-[350px] w-[500px] h-[300px] lg:h-[391px] rounded-lg">
+                                     <div className='flex items-center justify-center'>
+                                         <p className="m-0 lg:text-[24px] font-semibold md:text-[22px] text-[20px]">Reset Your Password</p>
+                                     </div>
+                                     <p className="m-0 md:pb-[60px] pb-[30px] text-center font-semibold text-[#282828] opacity-[60%]">Enter the phone number associated with the account to get<br/> code to reset the password</p>
+                                     <div className='flex justify-center'>
+                                         <input className="rounded md:w-[500px] border px-5 py-6" value={OtpPhoneNumber} onChange={(e) => setOtpPhoneNumber(e.target.value)} type="text" placeholder='Phone Number'  />
+                                     </div>                                    
+                                     <div className=' md:mt-[40px]'>
+                                        <div className='flex md:mb-3 mb-2 items-start justify-center gap-3'>
+                                            <span className='text-[#282828] opacity-[60%]'>{"Didn’t receive code?"}</span>
+                                            <span className='text-[#2097CF] font-bold'>Resend code in {`${timeLeft}`}</span>
+                                        </div>
+                                        <div className='flex justify-center'>
+                                            <button type='submit' className='md:px-9 rounded-xl md:py-4 bg-[#909090] text-[#FFFFFF]'>Get code</button>
+                                        </div>
+                                     </div>
+                                 </div>
+                             </form>
+                         </div>
+                    </div>
+                 </AdminLayout>
+            }
         </div>
     );
 }
