@@ -11,10 +11,67 @@ import {Input} from '../../components/ui/input'
 import { Label } from "@/components/ui/label"
 import {Button} from '@/components/ui/button'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const formSchema = z.object({
+    first_name: z.string().min(5, {
+      message: "first name must be at least 5 characters.",
+    }),
+    last_name: z.string().min(5, {
+        message: "last name must be at least 5 characters.",
+    }),
+    // middle_name: z.string().min(5, {
+    //     message: "last name must be at least 5 characters.",
+    // }),
+    phone_number: z.string().regex(/^\d+$/, "Phone number must be digits only"),
+    email: z.string().email({message: "Invalid email format"})
+});
 
 function system(props) {
     const [system, setSystemContext] = useState(true)
     const [admin, createAdmin] = useState(false)
+    const [showAdminlist, setShowAdminList] = useState(false)
+    const token = localStorage.getItem("token")
+
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+          first_name: "",
+          last_name: "",
+        //   middle_name: "",
+          phone_number: "",
+          email: ""
+        },
+    });
+
+    const createAdminReq = async (data) => {
+
+        try {
+            
+            const res = await axios.post("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/registration",
+                data,
+                    {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    "Content-Type": "application/json",                
+                },
+                
+            })
+            console.log(res.data)
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    const AdminList =() =>{
+
+    }
     return (
         <div> 
             <AdminLayout title={"System Admin"}>
@@ -156,27 +213,49 @@ function system(props) {
                                 </p>
                                 <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Register a new user</p>
                             </div>
-                            <form onSubmit={()=>createAdmin(false)}>
-                                <div className='md:pt-8  mt-3 md:p-0 pt-5 p-9 bg-white md:w-[450px] lg:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
-                                    <div>
-                                        <p className="m-0 md:text-[22px] font-semibold text-center text-[18px]">
-                                            Add a new Admin
-                                        </p>
-                                        <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
-                                    </div>
-                                    <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="name">Full Name</Label>
-                                        <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
-                                    </div>
-                                    <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
-                                        <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
-                                    </div>
-                                    <div className='flex justify-center my-5 md:my-20'>
-                                        <Button type="button" onClick={() => createAdmin(true)} className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
+                            <div>
+                                <div >
+                                    <div className='md:pt-8  mt-3 md:p-0 pt-5 p-9 bg-white md:w-[450px] lg:w-[537px] md:h-[610px] border border-none rounded-[20px]'>
+                                        <div>
+                                            <p className="m-0 md:text-[22px] font-semibold text-center text-[18px]">
+                                                Add a new Admin
+                                            </p>
+                                            <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
+                                        </div>
+                                        <form onSubmit={handleSubmit(createAdminReq)}>
+                                            <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                                <Label className="font-semibold" htmlFor="first_name">First-Name</Label>
+                                                <Input className='md:p-7 w-[100%]' type="text" id="first_name" placeholder="First-Name"  {...register("first_name")}/>
+                                                {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
+                                            </div>
+                                            <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                                <Label className="font-semibold" htmlFor="lname">Phone Number</Label>
+                                                <Input className='md:p-7' type="text" id="last_name" placeholder="Last-name" {...register("last_name")}/>
+                                                {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
+                                            </div>
+                                            {/* <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                                <Label className="font-semibold" htmlFor="middle_name">Middle Name</Label>
+                                                <Input className='md:p-7' type="text" id="middle_name" placeholder="Middle-name" {...register("middle_name")}/>
+                                                {errors.middle_name && <p className="text-red-500">{errors.middle_name.message}</p>}
+                                            </div> */}
+                                            <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                                <Label className="font-semibold" htmlFor="phone_number">Phone Number</Label>
+                                                <Input className='md:p-7' type="number" id="phone_number" placeholder="091*********" {...register("phone_number")}/>
+                                                {errors.phone_number && <p className="text-red-500">{errors.phone_number.message}</p>}
+                                            </div>
+                                            <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                                <Label className="font-semibold" htmlFor="email">Email Address</Label>
+                                                <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
+                                                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+
+                                            </div>
+                                            <div className='flex justify-center my-5 md:my-7'>
+                                                <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <div>
                             <div>
@@ -333,7 +412,7 @@ function system(props) {
                                         <p className='text-[#282828] md:ms-0 ms-3 opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
                                     </div>
                                     <div>
-                                        <Link className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
+                                        <Link onClick={() => AdminList()} className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
                                     </div>
                                 </div>
                                 <div className='flex md:gap-0 gap-3 md:py-5 mx-4  py-3 items-start md:w-[80%] md:mx-auto justify-between'>
