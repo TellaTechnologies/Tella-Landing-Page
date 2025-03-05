@@ -35,6 +35,7 @@ function system(props) {
     const [admin, createAdmin] = useState(false)
     const [showAdminlist, setShowAdminList] = useState(false)
     const token = localStorage.getItem("token")
+    const [loading, setLoading] = useState(false)
 
 
     const { register, handleSubmit, formState: { errors } } = useForm({
@@ -49,7 +50,7 @@ function system(props) {
     });
 
     const createAdminReq = async (data) => {
-
+        setLoading(true)
         try {
             
             const res = await axios.post("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/registration",
@@ -247,10 +248,9 @@ function system(props) {
                                                 <Label className="font-semibold" htmlFor="email">Email Address</Label>
                                                 <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
                                                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-
                                             </div>
                                             <div className='flex justify-center my-5 md:my-7'>
-                                                <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
+                                                <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">{loading ? "Saving": "Save"}</Button>
                                             </div>
                                         </form>
                                     </div>

@@ -135,15 +135,17 @@ const handleSubmit= async (e, data) =>{
         // Find the selected user from state
         const selectedUser = Users.find(user => user.userId === selectUser);
         if (!selectedUser) {
-    console.error("User not found in the list.");
-    return;
+            console.error("User not found in the list.");
+            return;
         }
+
+        const newStatus = stats; // Store the current status
 
         try {
     console.log("Updating user:", selectedUser);
 
     const response2 = await axios.put(
-        `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${selectUser}/status?statusType=${stats}`,
+        `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${selectUser}/status?statusType=${newStatus}`,
         {},
         {
     headers: {
@@ -153,11 +155,12 @@ const handleSubmit= async (e, data) =>{
         }
     );
 
-    console.log("Status Update Response:", response2.data.data);
+    // console.log("Status Update Response:", response2.data.data);
     const updatedUser = response2.data.data;
+    console.log(updatedUser)
 
     // Update state with new user details
-    setStatus(updatedUser.approvalStatus || "PENDING");
+    setStatus(updatedUser.approvalStatus);
     setUserImage(updatedUser.profile?.selfieImage || "");
     setPNumber(updatedUser.phoneNumber || "");
 
@@ -475,7 +478,7 @@ finally {
                                 <div>
                                     <label className='text-[#282828] opacity-[60%] ' htmlFor="stats">Status</label>
                                     <select required value={stats} onChange={(e) => setStats(e.target.value)} id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option value="approved">Active</option>
+                                        <option value="approved">Approved</option>
                                         <option value="pending">Pending</option>
                                         <option value="suspended">Suspended</option>
                                     </select>
