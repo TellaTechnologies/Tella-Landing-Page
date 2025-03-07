@@ -31,7 +31,7 @@ function Transactions() {
             <div>
                 <AdminLayout title={"Agent Transactions"}>
                     <div>
-                        <p className="m-0 md:text-[22px] font-medium">Overview</p>
+                        <p className="m-0 md:text-[22px] text-[#282828] font-medium">Overview</p>
                     </div>
                     <div className="flex flex-wrap mx-auto lg:mx-0 items-center justify-around">
 
@@ -43,8 +43,8 @@ function Transactions() {
                                             <img src={Rectangle}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-gray-300">Total Users</p>
-                                            <p className='lg:text-[34px] md:text-[25px]'>0</p>
+                                            <p className="m-0 text-[#282828] opacity-[50%]">Total Users</p>
+                                            <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
                                         </div>
                                     </div>
                                     <div>
@@ -58,7 +58,7 @@ function Transactions() {
                                     <div>
                                         <p className="m-0 text-[14px]">
                                             <span className='text-green-400'>+12%</span>
-                                            <span className='ps-1'>
+                                            <span className='ps-1 text-[#282828]'>
                                                 high last week
                                             </span>
                                         </p>
@@ -105,8 +105,8 @@ function Transactions() {
                                             <img src={Rectangle}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-gray-300">Customer Transactions</p>
-                                            <p className='lg:text-[30px] md:text-[25px]'>₦5,876.00</p>
+                                            <p className="m-0 text-[#282828] opacity-[50%]">Customer Transactions</p>
+                                            <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦5,876.00</p>
                                         </div>
                                     </div>
                                     <div>
@@ -120,7 +120,7 @@ function Transactions() {
                                     <div>
                                         <p className="m-0 text-[14px]">
                                             <span className='text-green-400'>+12%</span>
-                                            <span className='md:ps-1'>
+                                            <span className='md:ps-1 text-[#282828]'>
                                                 high last week
                                             </span>
                                         </p>
@@ -136,8 +136,8 @@ function Transactions() {
                                             <img src={Rectangle}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-gray-300">Revenue</p>
-                                            <p className='lg:text-[30px] md:text-[25px]'>₦49,875.00</p>
+                                            <p className="m-0 text-[#282828] opacity-[50%]">Revenue</p>
+                                            <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦49,875.00</p>
                                         </div>
                                     </div>
                                     <div className='md:ps-0 ps-3'>
@@ -151,7 +151,7 @@ function Transactions() {
                                     <div>
                                         <p className="m-0 text-[14px]">
                                             <span className='text-red-500'>+12%</span>
-                                            <span className='ps-1'>
+                                            <span className='ps-1 text-[#282828]'>
                                                 high last week
                                             </span>
                                         </p>
@@ -163,7 +163,7 @@ function Transactions() {
                     <div>
                         <div className='flex flex-wrap items-center justify-between'>
                             <div>
-                                <p className="m-0">Agent Transactions</p>
+                                <p className="m-0 text-[#282828]">Agent Transactions</p>
                                 
                             </div>
                             <div className='flex items-center md:gap-4   justify-end'>

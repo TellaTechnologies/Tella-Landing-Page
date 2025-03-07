@@ -363,10 +363,10 @@ finally {
                             </TableCaption>
                             <TableHeader>
                                 <TableRow className="bg-[#f3f4f680]">
-                                    <TableHead className="w-[60%]">User</TableHead>
-                                    <TableHead>Role</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Actions</TableHead>
+                                    <TableHead className="w-[60%] text-[#282828]">User</TableHead>
+                                    <TableHead className="text-[#282828]">Role</TableHead>
+                                    <TableHead className="text-[#282828]">Status</TableHead>
+                                    <TableHead className="text-[#282828]">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -381,7 +381,7 @@ finally {
                                     </TableRow>
                                 ) : Users.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan="4" className="text-center text-gray-500">
+                                        <TableCell colSpan="4" className="text-center text-[#282828]">
                                             No users created yet.
                                         </TableCell>
                                     </TableRow>
@@ -392,12 +392,12 @@ finally {
                                                 <div className='flex md:gap-3 items-center'>
                                                     <img src={userImage} alt="" loading='true' className='w-[32px] h-[32px] rounded-full'/>
                                                     <div>
-                                                        <p className="m-0 md:text-[15px] lg:text-[16px] text-[14px]">{user.username}</p>
-                                                        <p className="text-sm text-gray-400 m-0">{number}</p>
+                                                        <p className="m-0 md:text-[15px] text-[#282828] lg:text-[16px] text-[14px]">{user.username}</p>
+                                                        <p className="text-sm text-[#282828] m-0">{number}</p>
                                                     </div>
                                                 </div>
                                             </TableCell>
-                                            <TableCell className="p-4 capitalize">{user.role.toLowerCase()}</TableCell>
+                                            <TableCell className="p-4 capitalize text-[#282828]">{user.role.toLowerCase()}</TableCell>
                                             <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${color === true ? "bg-[#DCFCE7]" : color === false ? "bg-[#f3c7a8] text-[#E8731F]" : "bg-transparent"}`}>
                                                 {user.approvalStatus.toLowerCase()}
                                             </TableCell>

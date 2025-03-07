@@ -6,15 +6,33 @@ import Frame from '../../assets/image/Frame1.svg'
 import FrameTwo from '../../assets/image/Frame2.svg'
 import FrameThree from '../../assets/image/Frame3.svg'
 import FrameFive from '../../assets/image/Frame55.svg'
-import { ArrowDownToLine, ArrowUp, ChevronDown} from 'lucide-react';
+import { ArrowDownToLine, ArrowUp, ChevronDown, CalendarIcon} from 'lucide-react';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar" 
+import { cn } from "@/lib/utils"
 import {Input} from '../../components/ui/input'
 import { Label } from "@/components/ui/label"
 import {Button} from '@/components/ui/button'
+import MagnifyingGlass from '../../assets/image/coolicon.svg'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table"
 
 const formSchema = z.object({
     first_name: z.string().min(5, {
@@ -27,18 +45,20 @@ const formSchema = z.object({
     //     message: "last name must be at least 5 characters.",
     // }),
     phone_number: z.string().regex(/^\d+$/, "Phone number must be digits only"),
-    email: z.string().email({message: "Invalid email format"})
+    email: z.string().email({message: "Invalid data submitted"})
 });
 
 function system(props) {
-    const [system, setSystemContext] = useState(true)
-    const [admin, createAdmin] = useState(false)
+    const [system, setSystemContext] = useState(false)
+    const [admin, createAdmin] = useState(true)
     const [showAdminlist, setShowAdminList] = useState(false)
     const token = localStorage.getItem("token")
     const [loading, setLoading] = useState(false)
+    const [date, setDate] = useState(null)
+    const [AdminDetails, setAdminDetails] = useState(false)
+    const [error, setError] = useState("")
 
-
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
           first_name: "",
@@ -63,9 +83,13 @@ function system(props) {
                 
             })
             console.log(res.data)
-            
+            setSystemContext(false)
+            createAdmin(true)
+            setLoading(false)
+            reset();
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
+            setError(error.message)
         }
     }
 
@@ -204,8 +228,8 @@ function system(props) {
                     </div>
                 </div> 
                 {
-                    system ?
-                    <div className={`${admin ? " hidden" : "lg:flex"} flex-wrap  mx-auto items-center justify-center gap-4 `}>
+                    system &&
+                    <div className={`${admin ? " hidden" : "lg:flex sm:flex items-start"} flex-wrap  mx-auto  justify-center gap-4 `}>
                         {/*Add User Admin  */}
                         <div>
                             <div>
@@ -230,9 +254,8 @@ function system(props) {
                                                 {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                                             </div>
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                                <Label className="font-semibold" htmlFor="lname">Phone Number</Label>
+                                                <Label className="font-semibold" htmlFor="last_name">Last Name</Label>
                                                 <Input className='md:p-7' type="text" id="last_name" placeholder="Last-name" {...register("last_name")}/>
-                                                {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
                                             </div>
                                             {/* <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
                                                 <Label className="font-semibold" htmlFor="middle_name">Middle Name</Label>
@@ -242,17 +265,19 @@ function system(props) {
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
                                                 <Label className="font-semibold" htmlFor="phone_number">Phone Number</Label>
                                                 <Input className='md:p-7' type="number" id="phone_number" placeholder="091*********" {...register("phone_number")}/>
-                                                {errors.phone_number && <p className="text-red-500">{errors.phone_number.message}</p>}
                                             </div>
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
                                                 <Label className="font-semibold" htmlFor="email">Email Address</Label>
                                                 <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
                                                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                                             </div>
-                                            <div className='flex justify-center my-5 md:my-7'>
-                                                <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">{loading ? "Saving": "Save"}</Button>
+                                            <div>
+                                                <p className='text-red-400'>{error}</p>
                                             </div>
-                                        </form>
+                                            <div className='flex justify-center my-5 md:my-5'>
+                                                <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">{loading ? "Saving": "Save"}</Button>
+                                            </div>                                                                                      
+                                        </form>                                        
                                     </div>
                                 </div>
                             </div>
@@ -294,7 +319,158 @@ function system(props) {
                                 </div>
                             </div>
                         </div>
-                    </div>  :
+                    </div>
+                }
+                {
+                    admin &&
+                    <div className='lg:w-[90%] md:w-[100%] sm:w-[70%] mx-auto bg-white border-none rounded-[20px] h-[640px]'>  
+                        <div className='md:flex md:w-[100%] flex-wrap justify-between '>
+                            <div className='md:pt-4 md:w-[50%]  mt-3 md:p-4 pt-5 p-9'>
+                                <div className=''>
+                                    <p className="m-0 md:text-[17px] lg:text-[22px] font-semibold text-center text-[18px]">
+                                        Add a new Admin
+                                    </p>
+                                    <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
+                                </div>
+                                <form onSubmit={handleSubmit(createAdminReq)}>
+                                    <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="first_name">First-Name</Label>
+                                        <Input className='md:p-7 w-[100%]' type="text" id="first_name" placeholder="First-Name"  {...register("first_name")}/>
+                                        {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
+                                    </div>
+                                    <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="last_name">Last Name</Label>
+                                        <Input className='md:p-7' type="text" id="last_name" placeholder="Last-name" {...register("last_name")}/>
+                                        {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
+                                    </div>
+                                    {/* <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="middle_name">Middle Name</Label>
+                                        <Input className='md:p-7' type="text" id="middle_name" placeholder="Middle-name" {...register("middle_name")}/>
+                                        {errors.middle_name && <p className="text-red-500">{errors.middle_name.message}</p>}
+                                     </div> */}
+                                    <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="phone_number">Phone Number</Label>
+                                        <Input className='md:p-7' type="number" id="phone_number" placeholder="091*********" {...register("phone_number")}/>
+                                        {errors.phone_number && <p className="text-red-500">{errors.phone_number.message}</p>}
+                                    </div>
+                                    <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
+                                        <Label className="font-semibold" htmlFor="email">Email Address</Label>
+                                        <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
+                                        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                                    </div>
+                                    <div className='flex justify-center my-5 md:my-7'>
+                                        <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">{loading ? "Saving": "Save"}</Button>
+                                    </div>
+                                    <div className='text-red-400'>
+                                        {error}
+                                    </div>
+                                </form>
+                            </div>
+                            <div className='md:w-[50%] md:pt-8  mt-3 md:border-l-2  sm:border-l-[#D9D9D9]'>
+                                <div className='flex md:gap-2 lg:gap-6 justify-center'>
+                                    <div>
+                                        <p className="text-center md:text-[16px] lg:text-[22px] text-[18px] font-semibold">New Admin</p>
+                                        <p className='text-[#282828] md:ms-0 ms-3 opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
+                                    </div>
+                                    <div>
+                                        <Link onClick={() => AdminList()} className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
+                                    </div>
+                                </div>
+                                <div className='flex md:gap-0 gap-3 md:py-5 mx-4  py-3 items-start md:w-[80%] md:mx-auto justify-between'>
+                                    <div>
+                                        <p className="m-0 font-semibold md:text-[16px]">
+                                            Oluwatobi Fasanmi Ltd
+                                        </p>
+                                        <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
+                                            9088065789
+                                        </p>
+                                    </div>
+                                </div>                                
+                            </div> 
+                        </div>                                                 
+                    </div>
+                }
+                {
+                    showAdminlist&&
+                    <div>
+                        <div>
+                            <div className='flex items-center justify-between'>
+                                <div>
+                                    <p className="m-0 font-semibold lg:text-[20px]  text-[#282828] md:text-[18px] text-[17px]">Lists of Admin</p>
+                                </div>
+                                <div className='flex items-center md:gap-4   justify-end'>
+                                    <div>
+                                        <Button className="flex items-center justify-center  bg-[#2097CF]">
+                                            <div>
+                                                <ArrowDownToLine/>
+                                            </div>
+                                            <div>
+                                                <p className="m-0 text-white">Export PDF</p>
+                                            </div>
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        <div className="border rounded-[20px] gap-3 justify-center hidden  lg:flex items-center p-2 bg-white">
+                                            <input className="outline-none border-none md:ps-2 box-border bg-transparent" placeholder="Search Name" type="search"/>
+                                            <img className="md:pe-2 md:w-[25px]" src={MagnifyingGlass}/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "flex items-center  hover:bg-transparent bg-transparent border-none outline-none box-border font-normal",
+                                                    !date && "text-muted-foreground"
+                                                )}>
+                                                <CalendarIcon />
+                                                <ChevronDown/>
+                                                {date ? format(date, "PPP") : <span></span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                mode="single"
+                                                selected={date}
+                                                onSelect={setDate}
+                                                initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='bg-white rounded-xl md:mt-3 md:p-5'>
+                            <Table>
+                                <TableCaption>No Data, Just Yet.</TableCaption>
+                                <TableHeader className=" border-[#282828] border-b-2">
+                                    <TableRow className="bg-transparent text-[#282828]">
+                                        <TableHead className=" text-[#282828]">S/N</TableHead>
+                                        <TableHead className=" text-[#282828]">Admin Name</TableHead>
+                                        <TableHead className=" text-[#282828]">Phone Number</TableHead>
+                                        <TableHead className="text-center  text-[#282828]">Email Address</TableHead>
+                                        <TableHead className="text-center  text-[#282828]">Date Created</TableHead>
+                                        <TableHead className="text-center  text-[#282828]">Status</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {/* {invoices.map((invoice) => (
+                                    <TableRow key={invoice.invoice}>
+                                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
+                                        <TableCell>{invoice.paymentStatus}</TableCell>
+                                        <TableCell>{invoice.paymentMethod}</TableCell>
+                                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                                    </TableRow>
+                                    ))} */}
+                                </TableBody>
+                            </Table>  
+                        </div>
+                    </div>
+                }
+                {
+                    AdminDetails &&
                     <div>                               
                         <div  className="relative flex w-fit font-semibold rounded-lg">
                             <p className="m-0 md:text-[22px] text-[18px]">
@@ -380,59 +556,6 @@ function system(props) {
                                 <Button className="bg-transparent text-black border-2 md:px-20 md:py-[1.6rem]">Reject</Button>
                             </div>
                         </div>
-                    </div>
-                }
-                {
-                    admin ?
-                    <div className='md:w-[100%] sm:w-[70%] mx-auto bg-white border-none rounded-[20px] h-[610px]'>  
-                        <div className='md:flex md:w-[100%] flex-wrap justify-between '>
-                            <div className='md:pt-8 md:w-[50%]  mt-3 md:p-4 pt-5 p-9'>
-                                <div>
-                                    <p className="m-0 md:text-[17px] lg:text-[22px] font-semibold text-center text-[18px]">
-                                        Add a new Admin
-                                    </p>
-                                    <p className="m-0 text-center text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Fill in the details to add a new Admin</p>
-                                </div>
-                                <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                    <Label className="font-semibold" htmlFor="name">Full Name</Label>
-                                    <Input className='md:p-7 w-[100%]' type="name" id="name" placeholder="First Name" />
-                                </div>
-                                <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                    <Label className="font-semibold" htmlFor="Pnumber">Phone Number</Label>
-                                    <Input className='md:p-7' type="number" id="Pnumber" placeholder="Phone  Number" />
-                                </div>
-                                <div className='flex justify-center my-5 md:my-20'>
-                                    <Button className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">Save</Button>
-                                </div>
-                            </div>
-                            <div className='md:w-[50%] md:pt-8  mt-3 md:border-l-2  sm:border-l-[#D9D9D9]'>
-                                <div className='flex md:gap-2 lg:gap-6 justify-center'>
-                                    <div>
-                                        <p className="text-center md:text-[16px] lg:text-[22px] text-[18px] font-semibold">New Admin</p>
-                                        <p className='text-[#282828] md:ms-0 ms-3 opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
-                                    </div>
-                                    <div>
-                                        <Link onClick={() => AdminList()} className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
-                                    </div>
-                                </div>
-                                <div className='flex md:gap-0 gap-3 md:py-5 mx-4  py-3 items-start md:w-[80%] md:mx-auto justify-between'>
-                                    <div>
-                                        <p className="m-0 font-semibold md:text-[16px]">
-                                            Oluwatobi Fasanmi Ltd
-                                        </p>
-                                        <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
-                                            9088065789
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <Button onClick={()=> setSystemContext(prev=> !prev)} type="button" className='bg-[#2097CF] '>View Details</Button>
-                                    </div>
-                                </div>                                
-                            </div> 
-                        </div>                                                 
-                    </div> :
-                    <div>
-                        
                     </div>
                 }
             </AdminLayout>                           

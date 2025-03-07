@@ -45,7 +45,7 @@ function ListOfAgents() {
                                                 </div>
                                                 <div>
                                                     <p className="m-0 text-gray-300">Total Agents</p>
-                                                    <p className='lg:text-[34px] md:text-[25px]'>0</p>
+                                                    <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
                                                 </div>
                                             </div>
                                             <div>
@@ -59,7 +59,7 @@ function ListOfAgents() {
                                             <div>
                                                 <p className="m-0 text-[14px]">
                                                     <span className='text-green-400'>+12%</span>
-                                                    <span className='ps-1'>
+                                                    <span className='ps-1 text-[#282828]'>
                                                         high last week
                                                     </span>
                                                 </p>
@@ -107,7 +107,7 @@ function ListOfAgents() {
                                                 </div>
                                                 <div>
                                                     <p className="m-0 text-gray-400">Customer Transactions</p>
-                                                    <p className='lg:text-[30px] text-black md:text-[25px]'>₦5,876.00</p>
+                                                    <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦5,876.00</p>
                                                 </div>
                                             </div>
                                             <div>
@@ -121,7 +121,7 @@ function ListOfAgents() {
                                             <div>
                                                 <p className="m-0 text-[14px]">
                                                     <span className='text-green-950'>+12%</span>
-                                                    <span className='ps-1'>
+                                                    <span className='ps-1 text-[#282828]'>
                                                         high last week
                                                     </span>
                                                 </p>
@@ -138,7 +138,7 @@ function ListOfAgents() {
                                                 </div>
                                                 <div>
                                                     <p className="m-0 text-gray-300">Revenue</p>
-                                                    <p className='lg:text-[30px] md:text-[25px]'>₦49,875.00</p>
+                                                    <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦49,875.00</p>
                                                 </div>
                                             </div>
                                             <div className='md:ps-0 ps-3'>
@@ -152,7 +152,7 @@ function ListOfAgents() {
                                             <div>
                                                 <p className="m-0 text-[14px]">
                                                     <span className='text-red-500'>+12%</span>
-                                                    <span className='ps-1'>
+                                                    <span className='ps-1 text-[#282828]'>
                                                         high last week
                                                     </span>
                                                 </p>
@@ -164,7 +164,7 @@ function ListOfAgents() {
                             <div>
                                 <div className='flex items-center justify-between'>
                                     <div>
-                                        <p className="m-0">Agent Lists</p>
+                                        <p className="m-0 text-[#282828]">Agent Lists</p>
                                         <div>
                                             <p className="m-0 md:text-[16px] text-[13px] text-gray-500"> Here below are the lists of agents</p>
                                         </div>
@@ -206,7 +206,7 @@ function ListOfAgents() {
                                 </div>
                                 <div className='md:block flex justify-center md:my-0 my-3'>
                                     <div>
-                                        <p className="m-0 md:text-[24px] text-[17px]  lg:text-[32px] font-semibold">Oluwatobi Fasanmi </p>
+                                        <p className="m-0 md:text-[24px] text-[#282828] text-[17px]  lg:text-[32px] font-semibold">Oluwatobi Fasanmi </p>
                                         <p className='text-gray-400 md:text-[18px] text-[15px] lg:text-[20px] font-semibold'>0903546789</p>
                                         <Rating/>
                                     </div>
@@ -229,7 +229,7 @@ function ListOfAgents() {
                                                     </div>
                                                     <div>
                                                         <p className="m-0 text-gray-300">Total Agents</p>
-                                                        <p className='lg:text-[34px] md:text-[25px]'>0</p>
+                                                        <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -243,7 +243,7 @@ function ListOfAgents() {
                                                 <div>
                                                     <p className="m-0 text-[14px]">
                                                         <span className='text-green-400'>+12%</span>
-                                                        <span className='ps-1'>
+                                                        <span className='ps-1 text-[#282828]'>
                                                             high last week
                                                         </span>
                                                     </p>

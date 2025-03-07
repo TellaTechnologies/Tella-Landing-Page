@@ -117,7 +117,7 @@ const Sidebar = () => {
                                 </div> */}
                                 <div className="flex items-center justify-center">
                                     <span className={` ${isActive ? "text-black" : "text-white"}m-0 md:text-[16px] text-[14px] font-semibold`}>
-                                    System Admin <span class="badge border text-white border-none rounded-[100%] px-2 py-1 bg-red-700">0</span>
+                                    System Admin <span className="badge border text-white border-none rounded-[100%] px-2 py-1 bg-red-700">0</span>
                                     </span>
                                 </div>
                             </>

@@ -24,7 +24,7 @@ const Transactions = (props) => {
         <div>
             <AdminLayout title={"Customers Transactions"}>
                 <div>
-                    <p className="m-0 md:text-[22px] font-medium">Overview</p>
+                    <p className="m-0 md:text-[22px] text-[#282828] font-medium">Overview</p>
                 </div>
                     <div className="flex flex-wrap mx-auto lg:mx-0 items-center justify-around">
                         <div className='bg-white md:w-[258px] w-[250px] md:h-[138px] md:p-4  border border-none rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-4'>
@@ -35,8 +35,8 @@ const Transactions = (props) => {
                                             <img src={Rectangle}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-gray-300">Total Users</p>
-                                            <p className='lg:text-[34px] md:text-[25px]'>0</p>
+                                            <p className="m-0 text-[#282828] opacity-[50%]">Total Users</p>
+                                            <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
                                         </div>
                                     </div>
                                     <div>
@@ -50,7 +50,7 @@ const Transactions = (props) => {
                                     <div>
                                         <p className="m-0 text-[14px]">
                                             <span className='text-green-400'>+12%</span>
-                                            <span className='ps-1'>
+                                            <span className='ps-1 text-[#282828]'>
                                                 high last week
                                             </span>
                                         </p>
@@ -66,8 +66,8 @@ const Transactions = (props) => {
                                             <img src={Rectangle}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-gray-300">Agent Transactions</p>
-                                            <p className='lg:text-[30px] text-black  md:text-[25px]'>₦4,987.00</p>
+                                            <p className="m-0 text-[#282828] opacity-[50%]">Agent Transactions</p>
+                                            <p className='lg:text-[30px] text-[#282828]  md:text-[25px]'>₦4,987.00</p>
                                         </div>
                                     </div>
                                     <div>
@@ -81,7 +81,7 @@ const Transactions = (props) => {
                                     <div>
                                         <p className="m-0 text-[14px]">
                                             <span className='text-green-950'>+12%</span>
-                                            <span className='ps-1 '>
+                                            <span className='ps-1 text-[#282828]'>
                                                 high last week
                                             </span>
                                         </p>
@@ -128,8 +128,8 @@ const Transactions = (props) => {
                                             <img src={Rectangle}/>
                                         </div>
                                         <div>
-                                            <p className="m-0 text-gray-300">Revenue</p>
-                                            <p className='lg:text-[30px] md:text-[25px]'>₦49,875.00</p>
+                                            <p className="m-0 text-[#282828] opacity-[50%]">Revenue</p>
+                                            <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦49,875.00</p>
                                         </div>
                                     </div>
                                     <div className='md:ps-0 ps-3'>
@@ -143,7 +143,7 @@ const Transactions = (props) => {
                                     <div>
                                         <p className="m-0 text-[14px]">
                                             <span className='text-red-500'>+12%</span>
-                                            <span className='ps-1'>
+                                            <span className='ps-1 text-[#282828]'>
                                                 high last week
                                             </span>
                                         </p>
@@ -155,7 +155,7 @@ const Transactions = (props) => {
                     <div>
                         <div className='flex items-center justify-between'>
                             <div>
-                                <p className="m-0">Agent Transactions</p>
+                                <p className="m-0 text-[#282828]">Agent Transactions</p>
                                 
                             </div>
                             <div className='flex items-center md:gap-4   justify-end'>
