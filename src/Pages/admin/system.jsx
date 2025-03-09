@@ -33,7 +33,7 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-
+  import NotificationsSystem, { atalhoTheme, setUpNotifications, useNotifications }  from 'reapop';
 const formSchema = z.object({
     first_name: z.string().min(5, {
       message: "first name must be at least 5 characters.",
@@ -48,9 +48,15 @@ const formSchema = z.object({
     email: z.string().email({message: "Invalid data submitted"})
 });
 
-const ITEMS = 4
+const ITEMS = 8
 
 function system(props) {
+    setUpNotifications({
+        defaultProps: {
+            position: 'top-right',
+            dismissible: true
+        } 
+    })
     const [system, setSystemContext] = useState(true)
     const [admin, createAdmin] = useState(false)
     const [showAdminlist, setShowAdminList] = useState(false)
@@ -58,15 +64,25 @@ function system(props) {
     const [loading, setLoading] = useState(false)
     const [seeAdmin, setAdmin]= useState([])
     const [date, setDate] = useState(null)
-    // const [sumofUser, setSum]= useState(0)
-    // const Total = sumofUser * ITEMS
-    // const displaySum = Total * ITEMS
-    // const AdminsDisplay = seeAdmin.slice(Total, displaySum)
+    const [sumofUser, setSum]= useState(0)
+    const Total = sumofUser * ITEMS
+    const displaySum = Total + ITEMS
+    const AdminsDisplay = seeAdmin.slice(Total, displaySum)
     const [AdminDetails, setAdminDetails] = useState(false)
     const [error, setError] = useState("")
     const [user, setUserRole] = useState("ADMIN")
+    const {notifications, dismissNotification} = useNotifications()
+    const {notify} = useNotifications()
 
 
+    const AdminsTotalList = () => {
+        if(system || admin || showAdminlist == true){
+            setSystemContext(false)
+            createAdmin(false)
+            setShowAdminList(true)
+            AdminSetList()
+        }
+    }
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -114,7 +130,8 @@ function system(props) {
                 },
                 
             })
-            console.log(res.data)
+            // console.log(res.data)
+            notify('admin has succesfully been registered')
             setSystemContext(false)
             createAdmin(true)
             setLoading(false)
@@ -123,6 +140,12 @@ function system(props) {
         } catch (error) {
             console.log(error.message)
             setError(error.message)
+            notify('Error Occurred While Registering Admin')
+
+            if(first_name == 3){
+                notify("First Name must contain atleast 5 characters")
+            }
+
         }
     }
 
@@ -130,6 +153,14 @@ function system(props) {
     return (
         <div> 
             <AdminLayout title={"System Admin"}>
+                <NotificationsSystem
+                    // 2. Pass the notifications you want Reapop to display.
+                    notifications={notifications}
+                    // 3. Pass the function used to dismiss a notification.
+                    dismissNotification={(id) => dismissNotification(id)}
+                    // 4. Pass a builtIn theme or a custom theme.
+                    theme={atalhoTheme}
+                />
                 <div className="flex flex-wrap mx-auto lg:mx-0 items-center justify-around">
                                             
                     <div className='bg-white md:w-[258px] w-[250px] md:h-[138px] md:p-4  border border-none rounded-md md:ps-2  p-5 flex items-center justify-between md:my-5 lg:my-0 my-4'>
@@ -301,9 +332,6 @@ function system(props) {
                                                 <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
                                                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                                             </div>
-                                            <div>
-                                                <p className='text-red-400'>{error}</p>
-                                            </div>
                                             <div className='flex justify-center my-5 md:my-5'>
                                                 <Button type="submit"  className="bg-[#2097CF] w-[100%] text-white md:w-[80%] mx-auto md:p-8">{loading ? "Saving": "Save"}</Button>
                                             </div>                                                                                      
@@ -403,7 +431,7 @@ function system(props) {
                                         <p className='text-[#282828] md:ms-0 ms-3 opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
                                     </div>
                                     <div>
-                                        <Link  className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
+                                        <Link onClick={() => AdminsTotalList()}  className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
                                     </div>
                                 </div>
                                 <div className='flex md:gap-0 gap-3 md:py-5 mx-4  py-3 items-start md:w-[80%] md:mx-auto justify-between'>
@@ -420,7 +448,7 @@ function system(props) {
                                            ( <div>
                                                 {
                                                     seeAdmin.slice(0,6).map((adminslist, index) => (
-                                                        <div className='md:mb-6 md:mt:2   mb-3' key={index}>
+                                                        <div className='md:mb-6 md:mt:4   mb-3' key={index}>
                                                             <p className="m-0 font-semibold md:text-[16px]">{adminslist.username}</p>
                                                             <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">{adminslist.phoneNumber}</p>
                                                         </div>
@@ -488,26 +516,44 @@ function system(props) {
                         </div>
                         <div className='bg-white rounded-xl md:mt-3 md:p-5'>
                             <Table>
-                                <TableCaption>No Data, Just Yet.</TableCaption>
+                                {/* <TableCaption>No Data, Just Yet.</TableCaption> */}
                                 <TableHeader className=" border-[#282828] border-b-2">
                                     <TableRow className="bg-transparent text-[#282828]">
-                                        <TableHead className=" text-[#282828]">S/N</TableHead>
-                                        <TableHead className=" text-[#282828]">Admin Name</TableHead>
-                                        <TableHead className=" text-[#282828]">Phone Number</TableHead>
-                                        <TableHead className="text-center  text-[#282828]">Email Address</TableHead>
-                                        <TableHead className="text-center  text-[#282828]">Date Created</TableHead>
-                                        <TableHead className="text-center  text-[#282828]">Status</TableHead>
+                                        <TableHead className="font-semibold text-[#282828]">S/N</TableHead>
+                                        <TableHead className="flex font-semibold gap-1 items-center text-[#282828]">Admin <p className='sm:block hidden'>Name</p></TableHead>
+                                        <TableHead className="font-semibold text-[#282828]">Phone No</TableHead>
+                                        <TableHead className="text-center font-semibold flex  gap-1 items-center md:justify-center   text-[#282828]">Email <p className='lg:block hidden'>Address</p></TableHead>
+                                        <TableHead className="text-center font-semibold text-[#282828]">Date Created</TableHead>
+                                        <TableHead className="text-center font-semibold text-[#282828]">Status</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {/* {invoices.map((invoice) => (
-                                    <TableRow key={invoice.invoice}>
-                                        <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                                        <TableCell>{invoice.paymentStatus}</TableCell>
-                                        <TableCell>{invoice.paymentMethod}</TableCell>
-                                        <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+                                    {loading ? (
+                                    <TableRow>
+                                        <TableCell colSpan="4" className="text-center py-4">
+                                            <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                            </svg>
+                                        </TableCell>
                                     </TableRow>
-                                    ))} */}
+                                     ) : AdminsDisplay.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan="4" className="text-center text-[#282828]">
+                                            No users created yet.
+                                        </TableCell>
+                                    </TableRow>
+                                    ) :
+                                    (AdminsDisplay.map((admins, index) => (
+                                    <TableRow className="" key={index}>
+                                        <TableCell className="font-medium p-4 text-[#282828]">{index + 1}</TableCell>
+                                        <TableCell className="p-4 text-[#282828]">{admins.username}</TableCell>
+                                        <TableCell className="p-4 text-[#282828]">{admins.phoneNumber}</TableCell>
+                                        <TableCell className="p-4 text-center text-[#282828]">{admins.email}</TableCell>
+                                        <TableCell className="p-4 text-right text-[#282828]">{admins.createdAt}</TableCell>
+                                    </TableRow>
+                                    )))
+                                    }
                                 </TableBody>
                             </Table>  
                         </div>

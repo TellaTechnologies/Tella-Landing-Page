@@ -11,11 +11,13 @@ import Settings from "./Pages/admin/settings";
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthProvider } from "./AuthContext";
 import { Login } from "./Pages/login";
+import { NotificationsProvider } from "reapop";
 
 function App() {
   const token = localStorage.getItem("token");
 
   return (
+    <NotificationsProvider>
     <AuthProvider>
       <div className="font-sans">
         <Router>
@@ -44,7 +46,8 @@ function App() {
           </Routes>
         </Router>
       </div>
-    </AuthProvider>
+    </AuthProvider> 
+    </NotificationsProvider>
   );
 }
 
