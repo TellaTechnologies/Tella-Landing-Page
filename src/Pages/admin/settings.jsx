@@ -28,6 +28,7 @@ import Write from '../../assets/image/button.svg'
 import Padlock from '../../assets/image/padlock.svg'
 import Key from '../../assets/image/key.svg'
 import ErrorOne from '../../assets/image/error1.svg'
+import OTPInput from 'react-otp-input';
 
 const ITEMS_PER_PAGE = 4; // Number of items per page
 
@@ -54,6 +55,7 @@ function settings() {
     const [otpPage, setOtpPage] = useState(false)
     const [timeLeft, setTimeLeft] = useState(31); // Start from 30s
     const [isTimerActive, setIsTimerActive] = useState(false);
+    const [otp, setOtp] = useState('');
 
 
     // Handle Next and Previous
@@ -294,7 +296,7 @@ finally {
                         </div>
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 md:flex flex-wrap items-center lg:justify-start justify-center  w-[100%] h-[500px] md:h-[425px] border border-none rounded-3xl'>
-                        <div className="lg:w-[500px] md:mt-0 mt-4 md:p-5 p-4  md:h-[171px] border-2 rounded-md">
+                        <div className="md:w-[500px] md:max-w-[400px] md:mt-0 mt-4 md:p-5 p-4  md:h-[171px] border-2 rounded-md">
                             <p className="m-0  md:text-[20px] text-[18px] font-semibold">Platform Security</p>
                             <div>
                                 <p className="m-0 'text-[#282828]  opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">Configure 2FA and password policies </p>
@@ -934,7 +936,14 @@ finally {
                                      </div>
                                      <p className="m-0 md:pb-[60px] pb-[30px] text-center font-semibold text-[#282828] opacity-[60%]">Enter the phone number associated with the account to get<br/> code to reset the password</p>
                                      <div className='flex justify-center'>
-                                         <input className="rounded md:w-[500px] border px-5 py-6" value={OtpPhoneNumber} onChange={(e) => setOtpPhoneNumber(e.target.value)} type="text" placeholder='Phone Number'  />
+                                        {/* <input className="rounded md:w-[500px] border px-5 py-6" value={OtpPhoneNumber} onChange={(e) => setOtpPhoneNumber(e.target.value)} type="text" placeholder=''  /> */}
+                                        <OTPInput
+                                            value={otp}
+                                            onChange={setOtp}
+                                            numInputs={4}
+                                            renderSeparator={<span>-</span>}
+                                            renderInput={(props) => <input {...props} />}
+                                        />
                                      </div>                                    
                                      <div className=' md:mt-[40px]'>
                                         <div className='flex md:mb-3 mb-2 items-start justify-center gap-3'>

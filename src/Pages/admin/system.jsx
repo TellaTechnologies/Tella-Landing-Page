@@ -48,15 +48,24 @@ const formSchema = z.object({
     email: z.string().email({message: "Invalid data submitted"})
 });
 
+const ITEMS = 4
+
 function system(props) {
-    const [system, setSystemContext] = useState(false)
-    const [admin, createAdmin] = useState(true)
+    const [system, setSystemContext] = useState(true)
+    const [admin, createAdmin] = useState(false)
     const [showAdminlist, setShowAdminList] = useState(false)
     const token = localStorage.getItem("token")
     const [loading, setLoading] = useState(false)
+    const [seeAdmin, setAdmin]= useState([])
     const [date, setDate] = useState(null)
+    // const [sumofUser, setSum]= useState(0)
+    // const Total = sumofUser * ITEMS
+    // const displaySum = Total * ITEMS
+    // const AdminsDisplay = seeAdmin.slice(Total, displaySum)
     const [AdminDetails, setAdminDetails] = useState(false)
     const [error, setError] = useState("")
+    const [user, setUserRole] = useState("ADMIN")
+
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(formSchema),
@@ -69,8 +78,31 @@ function system(props) {
         },
     });
 
+    
+    const AdminSetList = async() =>{
+        setLoading(true)
+        try {
+            const responseAdmin = await axios.get(`http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users?userRole=${user}`,
+                {
+                    headers: {
+                    "Content-Type": "application/json",                
+                    'Authorization': `Bearer ${token}`,
+                    }
+                }
+            )
+            setLoading(false)
+            const data = responseAdmin.data.data || []
+            setAdmin(data)
+            console.log(seeAdmin)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const createAdminReq = async (data) => {
         setLoading(true)
+        AdminSetList()
+
         try {
             
             const res = await axios.post("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/registration",
@@ -86,6 +118,7 @@ function system(props) {
             setSystemContext(false)
             createAdmin(true)
             setLoading(false)
+            AdminSetList()
             reset();
         } catch (error) {
             console.log(error.message)
@@ -93,10 +126,7 @@ function system(props) {
         }
     }
 
-
-    const AdminList =() =>{
-
-    }
+    
     return (
         <div> 
             <AdminLayout title={"System Admin"}>
@@ -373,17 +403,31 @@ function system(props) {
                                         <p className='text-[#282828] md:ms-0 ms-3 opacity-[0.4] md:text-[12px] lg:text-[16px] text-[14px]'>These are the list of new admin added to tella</p>
                                     </div>
                                     <div>
-                                        <Link onClick={() => AdminList()} className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
+                                        <Link  className="text-blue-600 md:me-0 me-4 md:text-[12px] text-[11px] lg:text-[16px] ">See all</Link>
                                     </div>
                                 </div>
                                 <div className='flex md:gap-0 gap-3 md:py-5 mx-4  py-3 items-start md:w-[80%] md:mx-auto justify-between'>
                                     <div>
-                                        <p className="m-0 font-semibold md:text-[16px]">
-                                            Oluwatobi Fasanmi Ltd
-                                        </p>
-                                        <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
-                                            9088065789
-                                        </p>
+                                            {
+                                            loading ? 
+                                            (<div>
+                                                <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                                </svg>
+                                            </div>)
+                                            :
+                                           ( <div>
+                                                {
+                                                    seeAdmin.slice(0,6).map((adminslist, index) => (
+                                                        <div className='md:mb-6 md:mt:2   mb-3' key={index}>
+                                                            <p className="m-0 font-semibold md:text-[16px]">{adminslist.username}</p>
+                                                            <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">{adminslist.phoneNumber}</p>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>)
+                                            }
                                     </div>
                                 </div>                                
                             </div> 
