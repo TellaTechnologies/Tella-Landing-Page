@@ -109,12 +109,13 @@ function system(props) {
             setLoading(false)
             const data = responseAdmin.data.data || []
             setAdmin(data)
+            // console.log(data)
             console.log(seeAdmin)
         } catch (error) {
             console.log(error)
         }
     }
-
+    
     const createAdminReq = async (data) => {
         setLoading(true)
         AdminSetList()
@@ -135,7 +136,6 @@ function system(props) {
             setSystemContext(false)
             createAdmin(true)
             setLoading(false)
-            AdminSetList()
             reset();
         } catch (error) {
             console.log(error.message)
@@ -522,20 +522,20 @@ function system(props) {
                                         <TableHead className="font-semibold text-[#282828]">S/N</TableHead>
                                         <TableHead className="flex font-semibold gap-1 items-center text-[#282828]">Admin <p className='sm:block hidden'>Name</p></TableHead>
                                         <TableHead className="font-semibold text-[#282828]">Phone No</TableHead>
-                                        <TableHead className="text-center font-semibold flex  gap-1 items-center md:justify-center   text-[#282828]">Email <p className='lg:block hidden'>Address</p></TableHead>
-                                        <TableHead className="text-center font-semibold text-[#282828]">Date Created</TableHead>
+                                        <TableHead className=" font-semibold flex  gap-1 items-center md:justify-start   text-[#282828]">Email <p className='lg:block hidden'>Address</p></TableHead>
+                                        <TableHead className="text-center font-semibold text-[#282828] ">Date</TableHead>
                                         <TableHead className="text-center font-semibold text-[#282828]">Status</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {loading ? (
                                     <TableRow>
-                                        <TableCell colSpan="4" className="text-center py-4">
+                                        <TableCell colSpan="6" className="text-center py-4">
                                             <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                                             </svg>
-                                        </TableCell>
+                                        </TableCell>                                        
                                     </TableRow>
                                      ) : AdminsDisplay.length === 0 ? (
                                     <TableRow>
@@ -549,8 +549,9 @@ function system(props) {
                                         <TableCell className="font-medium p-4 text-[#282828]">{index + 1}</TableCell>
                                         <TableCell className="p-4 text-[#282828]">{admins.username}</TableCell>
                                         <TableCell className="p-4 text-[#282828]">{admins.phoneNumber}</TableCell>
-                                        <TableCell className="p-4 text-center text-[#282828]">{admins.email}</TableCell>
+                                        <TableCell className="p-4 text-left text-[#282828]">{admins.email}</TableCell>
                                         <TableCell className="p-4 text-right text-[#282828]">{admins.createdAt}</TableCell>
+                                        <TableCell className="p-4 text-right text-[#282828]">{admins.approvalStatus}</TableCell>
                                     </TableRow>
                                     )))
                                     }

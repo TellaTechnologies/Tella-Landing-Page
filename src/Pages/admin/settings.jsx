@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from '../../components/ui/input';
 import {Button} from '@/components/ui/button'
 import Error from '../../assets/image/error.svg'
-import Checkbox from "../../assets/image/Checkboxes.svg"
+import Checkboxs from "../../assets/image/Checkboxes.svg"
 import {Switch} from '@/components/ui/switch'
 import axios from 'axios';
 import Delete from '../../assets/image/delete.svg'
@@ -29,10 +29,20 @@ import Padlock from '../../assets/image/padlock.svg'
 import Key from '../../assets/image/key.svg'
 import ErrorOne from '../../assets/image/error1.svg'
 import OTPInput from 'react-otp-input';
+import { Checkbox } from "@/components/ui/checkbox"
+import NotificationsSystem, { atalhoTheme, notify, setUpNotifications, useNotifications } from 'reapop';
 
 const ITEMS_PER_PAGE = 4; // Number of items per page
 
 function settings() {
+     setUpNotifications({
+            defaultProps: {
+            position: 'top-right',
+            dismissible: true
+        } 
+    })
+    const [updatedpassword, ResetPasswordval] = useState("")
+    const [reset, setReset] = useState(false)
     const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
     const token = localStorage.getItem("token")
@@ -56,7 +66,8 @@ function settings() {
     const [timeLeft, setTimeLeft] = useState(31); // Start from 30s
     const [isTimerActive, setIsTimerActive] = useState(false);
     const [otp, setOtp] = useState('');
-
+    const {notifications, dismissNotification} = useNotifications()
+    const {notify} = useNotifications()
 
     // Handle Next and Previous
     const nextPage = () => {
@@ -157,6 +168,7 @@ const handleSubmit= async (e, data) =>{
         }
     );
 
+    console.log(stats)
     // console.log("Status Update Response:", response2.data.data);
     const updatedUser = response2.data.data;
     console.log(updatedUser)
@@ -227,19 +239,67 @@ try {
     
     if (responseOtp.status === 200) { // Axios returns status, not `ok`
         inputPnumber(false)
+        console.log(OtpPhoneNumber)
         setOtpPage(true)
         setView("")
+        setOtpPhoneNumber(OtpPhoneNumber);
     }
     console.log(responseOtp)
+    console.log(OtpPhoneNumber)
+
 } catch (error) {
-    console.log(error) 
+    // console.log(error) 
+    notify("Invalid phone number. Please check and try again")
 }
 finally {
     setLoading(false); // Ensure loading is turned off after success or error
 }
 } 
+const VerifyOtp = async (e) => {
+    e.preventDefault() 
+        
+        try {
+            const resverificationofOtp = await axios.post(`http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/verification/otp?phoneNumber=${OtpPhoneNumber}&otp=${otp}`,  
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }
+            )
+            console.log(OtpPhoneNumber)
+            console.log(otp)
+
+            if (!OtpPhoneNumber || !otp) {
+                notify("Phone number and OTP cannot be empty.");
+                return;
+            }
+
+            const data = resverificationofOtp.data
+            console.log(data)
+            notify("Verification Successful")
+            setOtpPage(false)
+            setReset(true)
+        } catch (error) {
+            console.error("Error response:", error.response?.data || error.message);
+            if (error.response?.status === 401) {
+                notify("Unauthorized: Check your phone number or OTP.");
+                console.log(error)
+            } else {
+                notify("Something went wrong. Please try again.");
+            }
+        }
+}
     return (
         <div>
+            <NotificationsSystem
+            // 2. Pass the notifications you want Reapop to display.
+            notifications={notifications}
+            // 3. Pass the function used to dismiss a notification.
+            dismissNotification={(id) => dismissNotification(id)}
+            // 4. Pass a builtIn theme or a custom theme.
+            theme={atalhoTheme}
+            />
             {
                 view === 'admin' && (
                 <AdminLayout  title={"System Admin Settings"}>
@@ -400,7 +460,7 @@ finally {
                                                 </div>
                                             </TableCell>
                                             <TableCell className="p-4 capitalize text-[#282828]">{user.role.toLowerCase()}</TableCell>
-                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${color === true ? "bg-[#DCFCE7]" : color === false ? "bg-[#f3c7a8] text-[#E8731F]" : "bg-transparent"}`}>
+                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${stats === "approved" && "bg-[#DCFCE7]"}`}>
                                                 {user.approvalStatus.toLowerCase()}
                                             </TableCell>
                                             <TableCell className="text-right">
@@ -480,7 +540,7 @@ finally {
                                 <div>
                                     <label className='text-[#282828] opacity-[60%] ' htmlFor="stats">Status</label>
                                     <select required value={stats} onChange={(e) => setStats(e.target.value)} id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option value="approved">Approved</option>
+                                        <option value="APPROVED">Approved</option>
                                         <option value="pending">Pending</option>
                                         <option value="suspended">Suspended</option>
                                     </select>
@@ -600,7 +660,7 @@ finally {
                                             </div>
                                         </div>
                                         <div>
-                                            <img src={Checkbox}/>
+                                            <img src={Checkboxs}/>
                                         </div>
                                     </div>
                                     <div className='flex items-center gap-1 lg:mt-0  mt-1 md:mt-6'>
@@ -929,7 +989,7 @@ finally {
                             <div>
                                  <p className="m-0 font-medium text-center text-[#282828] lg:text-[32px] md:text-[28px] text-[24px]">Reset Password</p>
                             </div>
-                            <form onSubmit={handleOtp}>
+                            <form onSubmit={VerifyOtp}>
                                  <div className="bg-white md:py-5 py-3 lg:w-[749px] md:w-[550px] md:h-[350px] w-[500px] h-[300px] lg:h-[391px] rounded-lg">
                                      <div className='flex items-center justify-center'>
                                          <p className="m-0 lg:text-[24px] font-semibold md:text-[22px] text-[20px]">Reset Your Password</p>
@@ -938,12 +998,13 @@ finally {
                                      <div className='flex justify-center'>
                                         {/* <input className="rounded md:w-[500px] border px-5 py-6" value={OtpPhoneNumber} onChange={(e) => setOtpPhoneNumber(e.target.value)} type="text" placeholder=''  /> */}
                                         <OTPInput
+                                        
                                             value={otp}
                                             onChange={setOtp}
                                             numInputs={4}
-                                            renderSeparator={<span>-</span>}
+                                            renderSeparator={<span>--</span>}
                                             renderInput={(props) => <input {...props} />}
-                                        />
+                                        />                                       
                                      </div>                                    
                                      <div className=' md:mt-[40px]'>
                                         <div className='flex md:mb-3 mb-2 items-start justify-center gap-3'>
@@ -955,7 +1016,59 @@ finally {
                                         </div>
                                      </div>
                                  </div>
-                             </form>
+                            </form>
+                         </div>
+                    </div>
+                 </AdminLayout>
+            }
+            {
+            reset && 
+                <AdminLayout title={"Reset Password"}>
+                    <div className='flex md:my-10 my-5 items-start justify-center'>
+                        <div>
+                            <div>
+                                 <p className="m-0 font-medium text-center text-[#282828] lg:text-[32px] md:text-[28px] text-[24px]">Reset Password</p>
+                            </div>
+                            <form onSubmit={VerifyOtp}>
+                                 <div className="bg-white md:py-5 py-3 lg:w-[749px] md:w-[550px] md:h-[350px] w-[500px] h-[300px] lg:h-[391px] rounded-lg">
+                                     <div className='flex items-center justify-center'>
+                                         <p className="m-0 lg:text-[24px] font-semibold md:text-[22px] text-[20px]">Reset Your Password</p>
+                                     </div>
+                                     <p className="m-0 md:pb-[40px] pb-[30px] text-center font-semibold text-[#282828] opacity-[60%]">Enter the phone number associated with the account to get<br/> code to reset the password</p>
+                                     <div className='flex justify-center'>
+                                        <input className="rounded md:w-[500px] border px-5 py-6" value={updatedpassword} onChange={(e) => ResetPasswordval(e.target.value)} type="password" placeholder='New Password'  />
+                                    </div> 
+                                    {/* 09154678898 */}
+                                    <div className="flex mx-8 justify-start">
+                                        <div className='flex justify-start gap-2'>
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="uppercase" />
+                                                <label
+                                                    htmlFor="uppercase"
+                                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                >
+                                                    Uppercase character
+                                                </label>
+                                            </div>  
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="lowercase" />
+                                                <label
+                                                    htmlFor="lowercase"
+                                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                >
+                                                    Lowercase character
+                                                </label>
+                                            </div>    
+                                        </div> 
+                                    </div> 
+                                                                    
+                                     <div className=' md:mt-[40px]'>
+                                        <div className='flex justify-center'>
+                                            <button type='submit' className='md:px-14 rounded-xl md:py-4 bg-[#2097CF] text-[#FFFFFF]'>Reset</button>
+                                        </div>
+                                     </div>
+                                 </div>
+                            </form>
                          </div>
                     </div>
                  </AdminLayout>
