@@ -112,6 +112,7 @@ function system(props) {
             // console.log(data)
             console.log(seeAdmin)
         } catch (error) {
+            setLoading(false)
             console.log(error)
         }
     }
@@ -140,9 +141,11 @@ function system(props) {
         } catch (error) {
             console.log(error.message)
             setError(error.message)
+            setLoading(false)
             notify('Error Occurred While Registering Admin')
 
             if(first_name == 3){
+                setLoading(false)
                 notify("First Name must contain atleast 5 characters")
             }
 
@@ -317,6 +320,7 @@ function system(props) {
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
                                                 <Label className="font-semibold" htmlFor="last_name">Last Name</Label>
                                                 <Input className='md:p-7' type="text" id="last_name" placeholder="Last-name" {...register("last_name")}/>
+                                                {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
                                             </div>
                                             {/* <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
                                                 <Label className="font-semibold" htmlFor="middle_name">Middle Name</Label>
@@ -381,7 +385,7 @@ function system(props) {
                 }
                 {
                     admin &&
-                    <div className='lg:w-[90%] md:w-[100%] sm:w-[70%] mx-auto bg-white border-none rounded-[20px] h-[640px]'>  
+                    <div className='lg:w-[90%] md:w-[100%] sm:w-[70%] mx-auto bg-white border-none rounded-[20px] h-fit'>  
                         <div className='md:flex md:w-[100%] flex-wrap justify-between '>
                             <div className='md:pt-4 md:w-[50%]  mt-3 md:p-4 pt-5 p-9'>
                                 <div className=''>

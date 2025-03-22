@@ -460,7 +460,7 @@ const VerifyOtp = async (e) => {
                                                 </div>
                                             </TableCell>
                                             <TableCell className="p-4 capitalize text-[#282828]">{user.role.toLowerCase()}</TableCell>
-                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${stats === "approved" && "bg-[#DCFCE7]"}`}>
+                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${user.approvalStatus.toLowerCase() === "approved" ? "bg-[#DCFCE7]" : user.approvalStatus.toLowerCase() === "pending" ? "bg-[#e8732033]  text-[#E8731F]" : user.approvalStatus.toLowerCase() === "suspended" ? "bg-[#d9d9d9] text-[#282828]" : "bg-gray-200"}`}>
                                                 {user.approvalStatus.toLowerCase()}
                                             </TableCell>
                                             <TableCell className="text-right">
