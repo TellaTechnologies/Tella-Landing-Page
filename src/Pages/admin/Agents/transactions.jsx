@@ -16,16 +16,72 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table"
+import axios from 'axios';
+const ITEMS_PER_PAGE = 8;
 function Transactions() {
     const [date, setDate] = useState(null)
     const [state, setState] = useState('');
+    const [agentList,setAgentList] = useState([])
+    const [loading, setLoading] = useState(false)
+    const token = localStorage.getItem("token")
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const shuffleArray = (array) => array.sort(() => Math.random() - 0.5); 
+
+    const filteredAgents = agentList.filter(agent =>
+        agent.username.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+
+    let globalIndex = 1;
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        return date.toLocaleString("en-GB", { 
+            day: "2-digit", 
+            month: "short", 
+            hour: "2-digit", 
+            minute: "2-digit",
+            hour12: true 
+        }).replace(",", "");
+    };
+
+    const GetAgentsList = async() =>{
+        setLoading(true)
+        try {
+            const response = await axios.get("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/transactions/byUserRole?userRole=AGENT", 
+                {
+                    headers: {
+                        "Content-Type": "application/json",                
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }
+            )
+            setLoading(false)
+            const agents= response.data.data
+            setAgentList(agents)
+            console.log(response.data.data[0])
+        } catch (error) {
+            console.error("Error fetching agents:", error.response ? error.response.data : error.message);
+        }
+    }
+
 
     useEffect(() => {
         return () => {
+            GetAgentsList();
 
         }
     }, []);
-
     return (
         <>
             <div>
@@ -163,13 +219,13 @@ function Transactions() {
                     <div>
                         <div className='flex flex-wrap items-center justify-between'>
                             <div>
-                                <p className="m-0 text-[#282828]">Agent Transactions</p>
+                                <p className="m-0 md:text-[20px] text-[#282828]">Agent Transactions</p>
                                 
                             </div>
                             <div className='flex items-center md:gap-4   justify-end'>
                                 <div>
                                     <div className="border rounded-[20px] gap-3 justify-center hidden  lg:flex items-center p-2 bg-white">
-                                    <input className="outline-none border-none md:ps-2 box-border bg-transparent" placeholder="Search" type="search"/>
+                                    <input className="outline-none border-none md:ps-2 box-border bg-transparent" placeholder="Search" onChange={(e) => setSearchQuery(e.target.value)} value={searchQuery} type="search"/>
                                     <img className="md:pe-2 md:w-[25px]" src={MagnifyingGlass}/>
                                     </div>
                                 </div>
@@ -210,6 +266,68 @@ function Transactions() {
                             </div>
 
                         </div>
+                        <div className='bg-white md:my-5 my-3 md:p-3 rounded-[20px]'>
+                            <Table className="">
+                                {/* <TableCaption>No Data, Just Yet.</TableCaption> */}
+                                <TableHeader className=" border-[#282828] border-b-2">
+                                    <TableRow className="bg-transparent text-[#282828]">
+                                    <TableHead className="font-semibold text-[#282828]">S/N</TableHead>
+                                    <TableHead className="flex font-semibold gap-1 items-center text-[#282828]">Agent Name </TableHead>
+                                    <TableHead className="font-semibold text-[#282828]">Type</TableHead>
+                                    <TableHead className=" font-semibold flex  gap-1 items-center md:justify-start   text-[#282828]">Amount</TableHead>
+                                    <TableHead className="text-center font-semibold text-[#282828] ">Date</TableHead>
+                                    <TableHead className="text-center font-semibold text-[#282828]">Status</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {loading ? (
+                                    <TableRow>
+                                        <TableCell colSpan="6" className="text-center py-4">
+                                            <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                            </svg>
+                                        </TableCell>                    
+                                    </TableRow>
+                                     ) : agentList.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan="4" className="text-center text-[#282828]">
+                                        No users created yet.
+                                        </TableCell>
+                                    </TableRow>
+                                    ) :
+                                    shuffleArray(filteredAgents).flatMap((agent) =>
+                                        shuffleArray(agent.transactions).slice(0, 6).map((transaction) => (
+                                            <TableRow key={`${agent.username}-${globalIndex}`}>
+                                                <TableCell className="font-medium p-4 text-[#282828]">
+                                                    {globalIndex++}
+                                                </TableCell>
+                                                <TableCell className="p-4 text-[#282828]">
+                                                    {agent.username}
+                                                </TableCell>
+                                                <TableCell className="p-4 text-[#282828]">
+                                                    {transaction.transactionType.toLowerCase()}
+                                                </TableCell>
+                                                <TableCell className="p-4 text-left text-[#282828]">
+                                                    {transaction.amount}
+                                                </TableCell>
+                                                <TableCell className="p-4 text-right text-[#282828]">
+                                                    {formatDate(transaction.date)}
+                                                </TableCell>
+                                               <TableCell className="p-4 text-center text-[#282828]">
+                                                    {transaction.status === "COMPLETED" ? (
+                                                        <p className="font-extrabold text-[#00B43C]">Success</p>
+                                                    ) : (
+                                                        <p className="text-[#FF0000]">Failed</p>
+                                                    )}
+                                                </TableCell>
+
+                                            </TableRow>
+                                        ))
+                                    )}             
+                                </TableBody>
+                            </Table> 
+                        </div>                        
                     </div>
                 </AdminLayout>
             </div>

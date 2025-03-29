@@ -41,7 +41,14 @@ function settings() {
             dismissible: true
         } 
     })
+    const [requirements, setRequirements] = useState({
+        uppercase: false,
+        lowercase: false,
+        minLength: false,
+        number: false,
+    });
     const [updatedpassword, ResetPasswordval] = useState("")
+    const [password, setPassword] = useState("");
     const [reset, setReset] = useState(false)
     const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
@@ -82,9 +89,18 @@ function settings() {
         }
     };
         
+const handlePasswordChange = (value) => {
+    setPassword(value);
+    setRequirements({
+    uppercase: /[A-Z]/.test(value),
+    lowercase: /[a-z]/.test(value),
+    minLength: value.length >= 8,
+    number: /\d/.test(value),
+    });
+};
 
 const setManageForUsers = async (event) => {
-    event.preventDefault();
+event.preventDefault();
     setView("user");
     setLoading(true);
 
@@ -289,6 +305,21 @@ const VerifyOtp = async (e) => {
                 notify("Something went wrong. Please try again.");
             }
         }
+}
+const UpdatePassword = async (e) => {
+    e.preventDefault()
+    try {
+        const response = axios.put("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/user-management/secrets/password", {otp, userId, password}, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                "Content-Type": "application/json",
+            }   
+        })
+
+        console.log(response)
+    } catch (error) {
+        console.log(error)
+    }
 }
     return (
         <div>
@@ -540,7 +571,8 @@ const VerifyOtp = async (e) => {
                                 <div>
                                     <label className='text-[#282828] opacity-[60%] ' htmlFor="stats">Status</label>
                                     <select required value={stats} onChange={(e) => setStats(e.target.value)} id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-7 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option value="APPROVED">Approved</option>
+                                        <option value="" selected disabled>Select an option</option>
+                                        <option value="approved">Approved</option>
                                         <option value="pending">Pending</option>
                                         <option value="suspended">Suspended</option>
                                     </select>
@@ -1029,45 +1061,66 @@ const VerifyOtp = async (e) => {
                             <div>
                                  <p className="m-0 font-medium text-center text-[#282828] lg:text-[32px] md:text-[28px] text-[24px]">Reset Password</p>
                             </div>
-                            <form onSubmit={VerifyOtp}>
-                                 <div className="bg-white md:py-5 py-3 lg:w-[749px] md:w-[550px] md:h-[350px] w-[500px] h-[300px] lg:h-[391px] rounded-lg">
+                            <form onSubmit={UpdatePassword}>
+                                 <div className="bg-white md:py-5 py-3 lg:w-[749px] md:w-[550px] md:h-[350px] w-[500px] h-[300px] lg:h-[421px] rounded-lg">
                                      <div className='flex items-center justify-center'>
                                          <p className="m-0 lg:text-[24px] font-semibold md:text-[22px] text-[20px]">Reset Your Password</p>
                                      </div>
                                      <p className="m-0 md:pb-[40px] pb-[30px] text-center font-semibold text-[#282828] opacity-[60%]">Enter the phone number associated with the account to get<br/> code to reset the password</p>
                                      <div className='flex justify-center'>
-                                        <input className="rounded md:w-[500px] border px-5 py-6" value={updatedpassword} onChange={(e) => ResetPasswordval(e.target.value)} type="password" placeholder='New Password'  />
+                                        <input className="rounded outline-none md:w-[500px] border px-5 py-6" value={password}  onChange={(e) => handlePasswordChange(e.target.value)} type="password" placeholder='New Password'  />
                                     </div> 
                                     {/* 09154678898 */}
-                                    <div className="flex mx-8 justify-start">
-                                        <div className='flex justify-start gap-2'>
+                                    <div className="flex lg:mt-[20px] md:mt-[14px] mt-[12px] md:ms-[2rem] lg:ms-[8.5rem] justify-start">
+                                        <div className='flex justify-start gap-8'>
                                             <div className="flex items-center space-x-2">
-                                                <Checkbox id="uppercase" />
+                                                <Checkbox className={`rounded-lg ${requirements.uppercase ? "bg-green-500" : "bg-gray-300"}`} checked={requirements.uppercase} id="uppercase" readOnly />
                                                 <label
                                                     htmlFor="uppercase"
-                                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    className="text-sm font-medium text-[#282828] opacity-[60%] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 >
                                                     Uppercase character
                                                 </label>
                                             </div>  
                                             <div className="flex items-center space-x-2">
-                                                <Checkbox id="lowercase" />
+                                                <Checkbox className={`rounded-lg ${requirements.lowercase ? "bg-green-500" : "bg-gray-300"}`} checked={requirements.lowercase} id="lowercase"  readOnly/>
                                                 <label
                                                     htmlFor="lowercase"
-                                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    className="text-sm font-medium leading-none text-[#282828] opacity-[60%] peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 >
                                                     Lowercase character
                                                 </label>
                                             </div>    
                                         </div> 
                                     </div> 
-                                                                    
+                                    <div className="flex md:mt-[20px] md:ms-[2rem] lg:ms-[8.5rem] justify-start">
+                                        <div className='flex justify-start gap-[1.31rem]'>
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox className={`rounded-lg ${requirements.minLength ? "bg-green-500" : "bg-gray-300"}`}  checked={requirements.minLength} id="minLength" readOnly />
+                                                <label
+                                                    htmlFor="minLength"
+                                                    className="text-sm text-[#282828] opacity-[60%] font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                >
+                                                    8 characters minimum
+                                                </label>
+                                            </div>   
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox className={`rounded-lg ${requirements.number ? "bg-green-500" : "bg-gray-300"}`} checked={requirements.number} readOnly id="number" />
+                                                <label
+                                                    htmlFor="number"
+                                                    className="text-sm text-[#282828] opacity-[60%] font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                >
+                                                   Number
+                                                </label>
+                                            </div>    
+                                        </div> 
+                                    </div>                             
                                      <div className=' md:mt-[40px]'>
                                         <div className='flex justify-center'>
                                             <button type='submit' className='md:px-14 rounded-xl md:py-4 bg-[#2097CF] text-[#FFFFFF]'>Reset</button>
                                         </div>
                                      </div>
-                                 </div>
+                                </div>
                             </form>
                          </div>
                     </div>
