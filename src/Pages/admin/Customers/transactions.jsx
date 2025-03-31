@@ -217,7 +217,7 @@ const Transactions = (props) => {
                     <div>
                         <div className='flex items-center justify-between'>
                             <div>
-                                <p className="m-0 md:text-[20px] text-[#282828]">Agent Transactions</p>
+                                <p className="m-0 md:text-[20px] text-[#282828]">Customer Transactions</p>
                                 
                             </div>
                             <div className='flex items-center md:gap-4   justify-end'>

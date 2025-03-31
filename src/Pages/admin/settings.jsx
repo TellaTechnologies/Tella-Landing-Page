@@ -309,7 +309,7 @@ const VerifyOtp = async (e) => {
 const UpdatePassword = async (e) => {
     e.preventDefault()
     try {
-        const response = axios.put("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/user-management/secrets/password", {otp, userId, password}, {
+        const response = axios.put("http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/user-management/secrets/password", {otp, user_id, password}, {
             headers: {
                 'Authorization': 'Bearer ' + token,
                 "Content-Type": "application/json",

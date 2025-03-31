@@ -16,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Logins from '../assets/image/login (2).svg'
 const passwordRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,}$/;
 
 
@@ -84,52 +85,68 @@ export function Login() {
   
 
   return (
-    <Form  {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mx-auto w-[80%] my-4">
-        {/* Username Field */}
-        <div className="">
-            <p className="m-0 md:text-[20px] font-semibold">Login</p>
-        </div>
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter username" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="sm:flex bg-[#E0F0F8] items-center justify-center">
+      <div className="bg-[#2097CF] p-8 sm:h-[100vh] sm:w-1/2">
+          <div className="flex justify-center"> 
+            <img src={Logins} className="lg:w-[440px] md:w-[400px] md:h-[250px] w-[300px] lg:h-[360px]" alt="" />
+          </div>
+          <div className=" md:mt-0 sm:mt-7">
+            <p className="m-0 text-center lg:text-[24px] text-[20px] sm:text-[22px] text-white">Tella Technologies</p>
+            <p className="m-0 lg:mt-4 sm:mt-5 md:mt-2 lg:text-[20px] md:text-[18px] text-white text-center">At Tella, we’re on a mission to empower micro and small businesses in Sub-Saharan Africa with the financial tools they need to succeed. Our platform bridges the gap for the un-banked, providing secure and affordable financial services that drive growth and inclusion</p>
+          </div>
+      </div>
+      <div className="sm:w-1/2">
+        <Form  {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mx-auto w-[80%] py-6 md:my-4">
+            {/* Username Field */}
+            <div className=" flex justify-center">
+                <p className="m-0 md:text-[28px] lg:text-[32px] text-[24px]   font-semibold">Admin Login</p>
+            </div>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input className="bg-white md:py-6 lg:py-7 py-4 " placeholder="Enter username" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Password Field */}
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Enter password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            {/* Password Field */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" className="md:py-6 lg:py-7 py-4 bg-white" placeholder="Enter password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-         {/* Error Message */}
-        {error && <p className="text-red-500">{error}</p>}
+            {/* Error Message */}
+            {error && <p className="text-red-500">{error}</p>}
 
-        {/* Submit Button */}
-        <Button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </Button>
-      </form>
-    </Form>
+            {/* Submit Button */}
+            <Button className="w-full bg-[#2097CF] md:py-6" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+            <div className="flex justify-center">
+              <p className="m-0 text-center text-black">By clicking confrm, you agree with our <Link  className="text-black underline">Terms of Service</Link>  and <Link className="text-black underline">Privacy policy</Link> </p>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }

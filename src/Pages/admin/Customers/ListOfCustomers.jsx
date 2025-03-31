@@ -171,7 +171,7 @@ function ListOfCustomers(props) {
                 <div>
                     <div className='flex items-center justify-between'>
                         <div>
-                            <p className="m-0 text-[#282828]">Customer Lists</p>
+                            <p className="m-0 md:text-[22px] text-[#282828]">Customer Lists</p>
                             <div>
                                 <p className="m-0 md:text-[16px] text-[13px] text-gray-500"> Here below are the lists of<br/>  customers</p>
                             </div>
@@ -195,7 +195,7 @@ function ListOfCustomers(props) {
                             </div>
                         </div>
                     </div>
-                    <div className='flex flex-wrap justify-center gap-5'>
+                    <div className='flex flex-wrap md:mt-3 mt-2 justify-start gap-5'>
                             {
                                 customer.length === 0 ? (
                                     <svg className="animate-spin h-6 w-6 text-gray-500 mx-auto" viewBox="0 0 24 24">
