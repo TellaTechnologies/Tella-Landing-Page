@@ -18,19 +18,22 @@ import axios from 'axios';
 function ListOfAgents() {
     const [showAgentProfile, setShowAgentProfile] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [totalCustmersA   , settotalAgents] = useState()
     const [agent, setAgents] = useState([])
     const token = localStorage.getItem("token")
     const [listofagent, ListOfAgentsSet] = useState(false)
     const [profile, setProfile] = useState(null)
-
+    const [agentsId, setagentsId] = useState()
     
-        const handleFileChange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const imageUrl = URL.createObjectURL(file);
-                setSelectedImage(imageUrl);
-            }
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setSelectedImage(imageUrl);
         }
+    }
+
+
 
         const ListOfAgentsSets = () => {
             ListOfAgentsSet(true)
@@ -63,6 +66,26 @@ function ListOfAgents() {
     const handleProfile = (agents) =>{
         setShowAgentProfile(false)
         setProfile(agents)
+        setagentsId(agents)
+        agentsSum(agents)
+
+    }
+
+    const agentsSum =  async(agents) => {
+        try {
+            const res = await axios.get(`http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/business/metrics?agentUserId=${agents.userId}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",                
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }
+            )
+            const data = res.data.data.customersAnalysis.total_customers
+            settotalAgents(data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 
@@ -304,8 +327,8 @@ function ListOfAgents() {
                                                         <img src={Rectangle}/>
                                                     </div>
                                                     <div>
-                                                        <p className="m-0 text-gray-300">Total Agents</p>
-                                                        <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
+                                                        <p className="m-0 text-gray-300">Total Customers</p>
+                                                        <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>{totalCustmersA}</p>
                                                     </div>
                                                 </div>
                                                 <div>
