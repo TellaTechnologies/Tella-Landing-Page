@@ -73,6 +73,8 @@ function settings() {
     const [timeLeft, setTimeLeft] = useState(31); // Start from 30s
     const [isTimerActive, setIsTimerActive] = useState(false);
     const [otp, setOtp] = useState('');
+    const [select, setSelectedUser] = useState(null); // stores user info
+
     const {notifications, dismissNotification} = useNotifications()
     const {notify} = useNotifications()
 
@@ -171,18 +173,18 @@ const handleSubmit= async (e, data) =>{
         const newStatus = stats; // Store the current status
 
         try {
-    console.log("Updating user:", selectedUser);
+            console.log("Updating user:", selectedUser);
 
-    const response2 = await axios.put(
-        `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${selectUser}/status?statusType=${newStatus}`,
-        {},
-        {
-    headers: {
-        'Authorization': 'Bearer ' + token,
-        "Content-Type": "application/json",
-    }
-        }
-    );
+            const response2 = await axios.put(
+                `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${selectUser}/status?statusType=${newStatus}`,
+                {},
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        "Content-Type": "application/json",
+                    }
+                }
+            );
 
     console.log(stats)
     // console.log("Status Update Response:", response2.data.data);
@@ -213,10 +215,34 @@ const inputPnumberSet = () => {
     setView("")
 }
 
-const DeActiveUser = (e) => {
+const DeActiveUser = (e, userId) => {
     e.preventDefault();
-    SetDelsSet(true)
+    const userInfo = Users.find(user => user.userId === userId);
+    if (userInfo) {
+      setSelectedUser(userInfo);
+      SetDelsSet(true)
+    } else {
+      console.error("User not found");
+    }
 }
+
+const DeactivateUser = (e, userId) => {
+    e.preventDefault();
+  
+    setStats("deactivated");  // Update status
+    setSelectedUserId(userId);       // Set the user ID for update
+
+    console.log("User to deactivate:", userId);
+  
+    // Give time for state to update before submitting
+    setTimeout(() => {
+      handleSubmit(e);
+    }, 0);
+  
+    SetDelsSet(false);
+}
+  
+  
 
 const cancelUser = (e) => {
     e.preventDefault();
@@ -491,15 +517,17 @@ const UpdatePassword = async (e) => {
                                                 </div>
                                             </TableCell>
                                             <TableCell className="p-4 capitalize text-[#282828]">{user.role.toLowerCase()}</TableCell>
-                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${user.approvalStatus.toLowerCase() === "approved" ? "bg-[#DCFCE7]" : user.approvalStatus.toLowerCase() === "pending" ? "bg-[#e8732033]  text-[#E8731F]" : user.approvalStatus.toLowerCase() === "suspended" ? "bg-[#d9d9d9] text-[#282828]" : "bg-gray-200"}`}>
-                                                {user.approvalStatus.toLowerCase()}
+                                            <TableCell  className={`p-0 capitalize m-7 w-[70px] flex justify-center items-center rounded-lg ${user.approvalStatus.toLowerCase() === "approved" ? "bg-[#DCFCE7]" : user.approvalStatus.toLowerCase() === "pending" ? "bg-[#e8732033]  text-[#E8731F]" : user.approvalStatus.toLowerCase() === "deactivated" ? " text-[#282828]" : "bg-gray-200"}`}>
+                                                {user.approvalStatus.toLowerCase() === "deactivated"
+                                                ? "deactivated"
+                                                : user.approvalStatus.toLowerCase()}
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className='flex justify-start gap-2'>
                                                     <Link onClick={(e) => Edit(e, user.userId)} className='outline-none'>   
                                                         <img src={Write} alt="editIcon" />
                                                     </Link>
-                                                    <Link onClick={(e) => DeActiveUser(e)} className='outline-none'>
+                                                    <Link onClick={(e) => DeActiveUser(e, user.userId, console.log(user))} className='outline-none'>
                                                         <img src={Delete} alt="deleteIcon" />
                                                     </Link>
                                                 </div>
@@ -580,7 +608,7 @@ const UpdatePassword = async (e) => {
                             </form>                            
                         </div>
                     </div>: ""}
-                    {delset &&<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+                    {delset && select  && (<div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
                         <div className="bg-white md:w-[350px] w-[300px] h-[300px] lg:w-[553px] md:px-9 px-5 lg:h-[304px] p-4 rounded-lg shadow-lg relative">
                             <form onSubmit="">
                                 <div className='flex items-center justify-center'>
@@ -589,11 +617,11 @@ const UpdatePassword = async (e) => {
                                     </div>
                                 </div>
                                 <div className='md:my-5 my-4'>
-                                    <p className="m-0 md:text-[24px] text-[20px] text-center">Are you sure you want to deactivate John Doe (9165448290)</p>
+                                    <p className="m-0 md:text-[24px] text-[20px] text-center">Are you sure you want to deactivate  {select.username} ({select.phoneNumber})</p>
                                 </div>
                                 <div className='flex md:mt-12 mt-8 items-center md:gap-3 gap-2 justify-center'>
                                     <div>
-                                        <button className='md:py-2 text-white py-2 rounded-md bg-[#2097CF] md:px-7 px-3'>De-activate</button>
+                                        <button onClick={(e) =>DeactivateUser(e, select.userId)} className='md:py-2 text-white py-2 rounded-md bg-[#2097CF] md:px-7 px-3'>De-activate</button>
                                     </div>
                                     <div>
                                         <button onClick={(e) => cancelUser(e)} className='md:px-5 px-3 rounded-md  py-2 border bg-white'>Cancel</button>
@@ -601,7 +629,7 @@ const UpdatePassword = async (e) => {
                                 </div>                               
                             </form>                            
                         </div>
-                    </div>}
+                    </div>)}
                 </AdminLayout>  
             )} 
             { 
