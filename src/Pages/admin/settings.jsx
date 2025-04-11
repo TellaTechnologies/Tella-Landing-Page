@@ -173,7 +173,7 @@ const handleSubmit= async (e, data) =>{
         const newStatus = stats; // Store the current status
 
         try {
-            console.log("Updating user:", selectedUser);
+            // console.log("Updating user:", selectedUser);
 
             const response2 = await axios.put(
                 `http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/${selectUser}/status?statusType=${newStatus}`,
@@ -186,10 +186,10 @@ const handleSubmit= async (e, data) =>{
                 }
             );
 
-    console.log(stats)
+    // console.log(stats)
     // console.log("Status Update Response:", response2.data.data);
     const updatedUser = response2.data.data;
-    console.log(updatedUser)
+    // console.log(updatedUser)
 
     // Update state with new user details
     setStatus(updatedUser.approvalStatus);
@@ -232,23 +232,19 @@ const DeactivateUser = (e, userId) => {
     setStats("deactivated");  // Update status
     setSelectedUserId(userId);       // Set the user ID for update
 
-    console.log("User to deactivate:", userId);
+    // console.log("User to deactivate:", userId);
   
     // Give time for state to update before submitting
-    setTimeout(() => {
-      handleSubmit(e);
-    }, 0);
+setTimeout(() => {
+    handleSubmit(e);
+}, 0);
   
     SetDelsSet(false);
 }
-  
-  
-
 const cancelUser = (e) => {
     e.preventDefault();
     SetDelsSet(false)
 }  
-
 
 useEffect(() => {
     if (!isTimerActive) return; // Don't start if timer is inactive
@@ -273,7 +269,7 @@ setIsTimerActive(true);
 try {
     const responseOtp = await axios.post(`http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/verification-unauthenticated?phoneNumber=${OtpPhoneNumber}`, {},
         { 
-            headers:{
+            headers: {
                 "Content-Type": "application/json",
             }
         }
@@ -527,7 +523,7 @@ const UpdatePassword = async (e) => {
                                                     <Link onClick={(e) => Edit(e, user.userId)} className='outline-none'>   
                                                         <img src={Write} alt="editIcon" />
                                                     </Link>
-                                                    <Link onClick={(e) => DeActiveUser(e, user.userId, console.log(user))} className='outline-none'>
+                                                    <Link onClick={(e) => DeActiveUser(e, user.userId)} className='outline-none'>
                                                         <img src={Delete} alt="deleteIcon" />
                                                     </Link>
                                                 </div>

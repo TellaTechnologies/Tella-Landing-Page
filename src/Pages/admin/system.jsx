@@ -107,7 +107,7 @@ function system(props) {
                 }
             )
             setLoading(false)
-            const data = responseAdmin.data.data || []
+            const data = responseAdmin.data.data
             setAdmin(data)
             // console.log(data)
             console.log(seeAdmin)

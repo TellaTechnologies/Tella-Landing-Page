@@ -69,7 +69,7 @@ function Transactions() {
             setLoading(false)
             const agents= response.data.data
             setAgentList(agents)
-            console.log(response.data.data[0])
+            // console.log(response.data.data[0])
         } catch (error) {
             console.error("Error fetching agents:", error.response ? error.response.data : error.message);
         }

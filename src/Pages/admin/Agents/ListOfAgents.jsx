@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AdminLayout from '../../../components/admin/adminLayout';
 import Rectangle from '../../../assets/image/Rectangle.svg'
 import RectangleOne from '../../../assets/image/Rectangle2.svg'
@@ -24,17 +24,8 @@ function ListOfAgents() {
     const [listofagent, ListOfAgentsSet] = useState(false)
     const [profile, setProfile] = useState(null)
     const [agentsId, setagentsId] = useState()
-    
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setSelectedImage(imageUrl);
-        }
-    }
-
-
-
+    const [revenue, SetCustomersrevenue] = useState([])
+    const previousLength = useRef(0);
         const ListOfAgentsSets = () => {
             ListOfAgentsSet(true)
             setShowAgentProfile("")
@@ -54,7 +45,7 @@ function ListOfAgents() {
             
             const List = response.data.data
             setAgents(List)
-            console.log(response.data.data)
+            // console.log(response.data.data)
 
 
         } catch (error) {
@@ -68,7 +59,38 @@ function ListOfAgents() {
         setProfile(agents)
         setagentsId(agents)
         agentsSum(agents)
+        totalgentsrev(agents)
 
+    }
+
+    const totalgentsrev = async(agents) => {
+        try {
+            
+            const res = await axios.get(`http://ec2-44-205-21-123.compute-1.amazonaws.com:8080/api/v1/admin/users/revenue/earnings/metric?userId=${agents.userId}`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",                
+                        'Authorization': `Bearer ${token}`,
+                    }
+                }
+            )
+
+            const data = res.data.data.growth.earnings_for_period
+
+            if (data.length > previousLength.current) {
+                const newItems = data.slice(previousLength.current); // get only newly added items
+                newItems.forEach(item => {
+                    console.log("New object added:", item); // log/display the new ones
+                    SetCustomersrevenue(item.growth_percentage); // display each new one's value
+                });
+    
+                // Update the length reference
+                previousLength.current = data.length;
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const agentsSum =  async(agents) => {
@@ -111,7 +133,7 @@ function ListOfAgents() {
                                                 </div>
                                                 <div>
                                                     <p className="m-0 text-gray-300">Total Agents</p>
-                                                    <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
+                                                    <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>{agent.length}</p>
                                                 </div>
                                             </div>
                                             <div>
@@ -124,7 +146,7 @@ function ListOfAgents() {
                                             </div>
                                             <div>
                                                 <p className="m-0 text-[14px]">
-                                                    <span className='text-green-400'>+12%</span>
+                                                    <span className='text-green-400'>12%</span>
                                                     <span className='ps-1 text-[#282828]'>
                                                         high last week
                                                     </span>
@@ -341,7 +363,9 @@ function ListOfAgents() {
                                                 </div>
                                                 <div>
                                                     <p className="m-0 text-[14px]">
-                                                        <span className='text-green-400'>+12%</span>
+                                                        {revenue && (
+                                                        <span className={`${revenue > 45  ? "text-green-400" : "text-red-500"}`}>{revenue}%</span>
+                                                        )}
                                                         <span className='ps-1 text-[#282828]'>
                                                             high last week
                                                         </span>
@@ -365,7 +389,7 @@ function ListOfAgents() {
                                                 </div>
                                                 <div>
                                                     <p className="m-0 text-gray-300">Total Agents</p>
-                                                    <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
+                                                    <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>{agent.length}</p>
                                                 </div>
                                             </div>
                                             <div>
