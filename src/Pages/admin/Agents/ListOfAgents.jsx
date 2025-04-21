@@ -14,8 +14,13 @@ import Rating from '../../../components/rating';
 import Image4 from '../../../assets/image/image 4.svg'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import * as d3 from 'd3';
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Title, Legend,  } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Title, Legend);
 
 function ListOfAgents() {
+    const [chartData, setChartData] = useState(null);
     const [showAgentProfile, setShowAgentProfile] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
     const [totalCustmersA   , settotalAgents] = useState()
@@ -74,8 +79,31 @@ function ListOfAgents() {
                     }
                 }
             )
-
             const data = res.data.data.growth.earnings_for_period
+            const rawData=  res.data.data.growth
+
+            const parsedData = rawData.map(item => ({
+                period: item.period,
+                growth: item.growth_percentage,
+                dateObj: d3.timeParse('%Y-W%V')(item.period),
+            }));
+
+            parsedData.sort((a, b) => a.dateObj - b.dateObj);
+            const labels = parsedData.map(d => d.period);
+            const growthValues = parsedData.map(d => d.growth);
+            
+            setChartData({
+                labels,
+                datasets: [
+                  {
+                    label: 'Weekly Growth %',
+                    data: growthValues,
+                    backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1,
+                  },
+                ],
+            });
 
             if (data.length > previousLength.current) {
                 const newItems = data.slice(previousLength.current); // get only newly added items
@@ -320,63 +348,89 @@ function ListOfAgents() {
 
                             </div>
                         </> :
-                        <div className={`${listofagent ? "hidden" : "lg:flex"}  items-center justify-between`}>
-                            <div className='md:h-[307px] md:flex items-center justify-center md:gap-3  lg:gap-4 lg:w-[60%] md:w-[100%] bg-white border rounded-md'>
-                                <div>
-                                    <img className=' md:w-[250px] md:h-[250px] w-[150px] mx-auto md:my-0 my-3 rounded-[100%]' src={profile.profile.selfieImage}  />                                      
-                                </div>
-                                <div className='md:block flex justify-center md:my-0 my-3'>
+                        <div>
+                            <div className={`${listofagent ? "hidden" : "lg:flex"}  items-center justify-between`}>
+                                <div className='md:h-[307px] md:flex items-center justify-center md:gap-3  lg:gap-4 lg:w-[60%] md:w-[100%] bg-white border rounded-md'>
                                     <div>
-                                        <p className="m-0 md:text-[24px] text-[#282828] text-[17px]  lg:text-[32px] font-semibold">{profile.username}</p>
-                                        <p className='text-gray-400 md:text-[18px] text-[15px] lg:text-[20px] font-semibold'>{profile.phoneNumber}</p>
-                                        <Rating/>
+                                        <img className=' md:w-[250px] md:h-[250px] w-[150px] mx-auto md:my-0 my-3 rounded-[100%]' src={profile.profile.selfieImage}  />                                      
                                     </div>
-                                    <div className='md:mt-10'>
-                                        <Button  className="bg-[#2097CF] text-[16px] font-semibold text-white">Disable Agent</Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='md:h-[307px] my-3 h-[240px] md:w-[80%] md:mx-auto md:my-4 lg:w-[40%] bg-white border rounded-md border-l-2'>                               
-                                <div className='mx-auto md:w-[60%] lg:w-[60%] md:my-5 lg:my-9'>
-                                    <div className='flex justify-end md:me-0 md:mt-0 mt-2 me-2'>
-                                        <Link onClick={() => ListOfAgentsSets()} className='text-[#00ADFF] text-[16px]'>See all</Link>
-                                    </div>
-                                    <div className='bg-white  md:w-[258px] w-[250px] md:h-[160px] lg:p-4  border-2 rounded-[20px] md:ps-2  p-5  mx-auto items-center justify-between md:my-4 lg:my-0 my-4'>
+                                    <div className='md:block flex justify-center md:my-0 my-3'>
                                         <div>
-                                            <div className='flex  justify-between md:gap-24 gap-20 lg:gap-20'>
-                                                <div className='flex justify-center gap-3'>
-                                                    <div>
-                                                        <img src={Rectangle}/>
+                                            <p className="m-0 md:text-[24px] text-[#282828] text-[17px]  lg:text-[32px] font-semibold">{profile.username}</p>
+                                            <p className='text-gray-400 md:text-[18px] text-[15px] lg:text-[20px] font-semibold'>{profile.phoneNumber}</p>
+                                            <Rating/>
+                                        </div>
+                                        <div className='md:mt-10'>
+                                            <Button  className="bg-[#2097CF] text-[16px] font-semibold text-white">Disable Agent</Button>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div className='md:h-[307px] my-3 h-[240px] md:w-[80%] md:mx-auto md:my-4 lg:w-[40%] bg-white border rounded-md border-l-2'>                               
+                                    <div className='mx-auto md:w-[60%] lg:w-[60%] md:my-5 lg:my-9'>
+                                        <div className='flex justify-end md:me-0 md:mt-0 mt-2 me-2'>
+                                            <Link onClick={() => ListOfAgentsSets()} className='text-[#00ADFF] text-[16px]'>See all</Link>
+                                        </div>
+                                        <div className='bg-white  md:w-[258px] w-[250px] md:h-[160px] lg:p-4  border-2 rounded-[20px] md:ps-2  p-5  mx-auto items-center justify-between md:my-4 lg:my-0 my-4'>
+                                            <div>
+                                                <div className='flex  justify-between md:gap-24 gap-20 lg:gap-20'>
+                                                    <div className='flex justify-center gap-3'>
+                                                        <div>
+                                                            <img src={Rectangle}/>
+                                                        </div>
+                                                        <div>
+                                                            <p className="m-0 text-gray-300">Total Customers</p>
+                                                            <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>{totalCustmersA}</p>
+                                                        </div>
                                                     </div>
                                                     <div>
-                                                        <p className="m-0 text-gray-300">Total Customers</p>
-                                                        <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>{totalCustmersA}</p>
+                                                        <img src={FrameFive}/>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <img src={FrameFive}/>
-                                                </div>
-                                            </div>
-                                            <div className='flex items-center gap-1 lg:mt-0  mt-1 md:mt-2'>
-                                                <div>
-                                                    <ArrowUp size={15}/>
-                                                </div>
-                                                <div>
-                                                    <p className="m-0 text-[14px]">
-                                                        {revenue && (
-                                                        <span className={`${revenue > 45  ? "text-green-400" : "text-red-500"}`}>{revenue}%</span>
-                                                        )}
-                                                        <span className='ps-1 text-[#282828]'>
-                                                            high last week
-                                                        </span>
-                                                    </p>
+                                                <div className='flex items-center gap-1 lg:mt-0  mt-1 md:mt-2'>
+                                                    <div>
+                                                        <ArrowUp size={15}/>
+                                                    </div>
+                                                    <div>
+                                                        <p className="m-0 text-[14px]">
+                                                            {revenue && (
+                                                            <span className={`${revenue > 45  ? "text-green-400" : "text-red-500"}`}>{revenue}%</span>
+                                                            )}
+                                                            <span className='ps-1 text-[#282828]'>
+                                                                high last week
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
-                            </div> 
-                        </div>                        
+                            </div>
+                            <div className={`${listofagent ?"hidden" : "lg:flex"}  items-center justify-between`}>
+                                <div className='md:mb-4 lg:mb-0'>
+                                    <div className='flex justify-start md:mb-4'>
+                                        <p className="m-0 md:text-[18px] lg:text-[20px] text-[16px] text-[#282828] font-medium opacity-[70%]">Agent Performance</p>
+                                    </div>
+                                    <div className="bg-white w-[100%] h-[300px] mb-2 lg:w-[590px] lg:h-[444px] md:w-full md:h-[400px] rounded-3xl"></div>
+                                </div>
+                                <div>
+                                    <div className='flex md:mb-4 justify-start'>
+                                        <p className="m-0 md:text-[18px] lg:text-[20px] text-[16px] text-[#282828] font-medium opacity-[70%]">Recent Transaction</p>
+                                    </div>
+                                    <div className="bg-white md:p-7 w-[100%] h-[320px] lg:w-[491px] lg:h-[444px] md:w-full md:h-[390px] rounded-3xl">
+                                        <div className='flex items-center justify-between'>
+                                            <div>
+                                                <p className="m-0 text-[#282828] md:text-[16px] text-[14px] opacity-[50%]">Recent Transaction</p>
+                                            </div>
+                                            <div>
+                                                <Link className='text-[#00ADFF] text-[13px]'>See all</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                                            
+                            </div>  
+                        </div>                                              
                     }
                         <div className={`${listofagent ? "block" : "hidden"}`}>
                             <div className={`${listofagent? "flex flex-wrap" : "hidden"}  mx-auto lg:mx-0 items-center justify-around`}>

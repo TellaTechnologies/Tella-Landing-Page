@@ -175,7 +175,7 @@ function system(props) {
                                     </div>
                                     <div>
                                         <p className="m-0 text-gray-300">Total Agents</p>
-                                        <p className='lg:text-[34px] md:text-[25px]'>0</p>
+                                        <p className='lg:text-[34px] text-[#282828] md:text-[25px]'>0</p>
                                     </div>
                                 </div>
                                 <div>
@@ -189,7 +189,7 @@ function system(props) {
                                 <div>
                                     <p className="m-0 text-[14px]">
                                         <span className='text-green-400'>+12%</span>
-                                        <span className='ps-1'>
+                                        <span className='ps-1 text-[#282828] opacity-[50%]'>
                                             high last week
                                         </span>
                                     </p>
@@ -206,7 +206,7 @@ function system(props) {
                                     </div>
                                     <div>
                                         <p className="m-0 text-gray-300">Agent Transactions</p>
-                                        <p className='lg:text-[30px] text-black  md:text-[25px]'>₦4,987.00</p>
+                                        <p className='lg:text-[30px] text-[#282828]  md:text-[25px]'>₦4,987.00</p>
                                     </div>
                                 </div>
                                 <div>
@@ -220,7 +220,7 @@ function system(props) {
                                 <div>
                                     <p className="m-0 text-[14px]">
                                         <span className='text-green-950'>+12%</span>
-                                        <span className='ps-1 '>
+                                        <span className='ps-1 text-[#282828] opacity-[50%]'>
                                             high last week
                                         </span>
                                     </p>
@@ -237,7 +237,7 @@ function system(props) {
                                     </div>
                                     <div>
                                         <p className="m-0 text-gray-400">Customer Transactions</p>
-                                        <p className='lg:text-[30px] text-black md:text-[25px]'>₦5,876.00</p>
+                                        <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦5,876.00</p>
                                     </div>
                                 </div>
                                 <div>
@@ -251,7 +251,7 @@ function system(props) {
                                 <div>
                                     <p className="m-0 text-[14px]">
                                         <span className='text-green-950'>+12%</span>
-                                        <span className='ps-1'>
+                                        <span className='ps-1 text-[#282828] opacity-[50%]'>
                                             high last week
                                         </span>
                                     </p>
@@ -268,7 +268,7 @@ function system(props) {
                                     </div>
                                     <div>
                                         <p className="m-0 text-gray-300">Revenue</p>
-                                        <p className='lg:text-[30px] md:text-[25px]'>₦49,875.00</p>
+                                        <p className='lg:text-[30px] text-[#282828] md:text-[25px]'>₦49,875.00</p>
                                     </div>
                                 </div>
                                 <div className='md:ps-0 ps-3'>
@@ -282,7 +282,7 @@ function system(props) {
                                 <div>
                                     <p className="m-0 text-[14px]">
                                         <span className='text-red-500'>+12%</span>
-                                        <span className='ps-1'>
+                                        <span className='ps-1 text-[#282828] opacity-[50%]'>
                                             high last week
                                         </span>
                                     </p>
@@ -297,7 +297,7 @@ function system(props) {
                         {/*Add User Admin  */}
                         <div>
                             <div>
-                                <p className="m-0 md:text-[22px]  font-semibold text-[18px]">
+                                <p className="m-0 md:text-[22px] text-[#282828] font-semibold text-[18px]">
                                     Add a New user
                                 </p>
                                 <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">Register a new user</p>
@@ -313,26 +313,26 @@ function system(props) {
                                         </div>
                                         <form onSubmit={handleSubmit(createAdminReq)}>
                                             <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                                <Label className="font-semibold" htmlFor="first_name">First-Name</Label>
+                                                <Label className="font-semibold  text-[#282828]" htmlFor="first_name">First-Name</Label>
                                                 <Input className='md:p-7 w-[100%]' type="text" id="first_name" placeholder="First-Name"  {...register("first_name")}/>
                                                 {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                                             </div>
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                                <Label className="font-semibold" htmlFor="last_name">Last Name</Label>
+                                                <Label className="font-semibold  text-[#282828]" htmlFor="last_name">Last Name</Label>
                                                 <Input className='md:p-7' type="text" id="last_name" placeholder="Last-name" {...register("last_name")}/>
                                                 {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
                                             </div>
                                             {/* <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                                <Label className="font-semibold" htmlFor="middle_name">Middle Name</Label>
+                                                <Label className="font-semibold " htmlFor="middle_name">Middle Name</Label>
                                                 <Input className='md:p-7' type="text" id="middle_name" placeholder="Middle-name" {...register("middle_name")}/>
                                                 {errors.middle_name && <p className="text-red-500">{errors.middle_name.message}</p>}
                                             </div> */}
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                                <Label className="font-semibold" htmlFor="phone_number">Phone Number</Label>
+                                                <Label className="font-semibold  text-[#282828]" htmlFor="phone_number">Phone Number</Label>
                                                 <Input className='md:p-7' type="number" id="phone_number" placeholder="091*********" {...register("phone_number")}/>
                                             </div>
                                             <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                                <Label className="font-semibold" htmlFor="email">Email Address</Label>
+                                                <Label className="font-semibold  text-[#282828]" htmlFor="email">Email Address</Label>
                                                 <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
                                                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                                             </div>
@@ -347,7 +347,7 @@ function system(props) {
                         <div>
                             <div>
                                 <div  className="relative flex md:w-[35%] w-[42%]  lg:mt-0 mt-4 lg:w-[30%] font-semibold rounded-lg">
-                                    <p className="m-0 md:text-[22px] text-[18px]">
+                                    <p className="m-0 md:text-[22px] text-[#282828] text-[18px]">
                                         New Requests
                                     </p>
                                     <span className="absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
@@ -363,7 +363,7 @@ function system(props) {
                                 <div>
                                     <div className='flex md:gap-0 gap-3 md:py-5 py-3 items-start md:w-[80%] mx-auto justify-between'>
                                         <div>
-                                            <p className="m-0 font-semibold md:text-[16px]">
+                                            <p className="m-0 font-semibold text-[#282828] md:text-[16px]">
                                                 Oluwatobi Fasanmi Ltd
                                             </p>
                                             <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">
@@ -396,27 +396,27 @@ function system(props) {
                                 </div>
                                 <form onSubmit={handleSubmit(createAdminReq)}>
                                     <div className="md:my-6 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="first_name">First-Name</Label>
+                                        <Label className="font-semibold  text-[#282828]" htmlFor="first_name">First-Name</Label>
                                         <Input className='md:p-7 w-[100%]' type="text" id="first_name" placeholder="First-Name"  {...register("first_name")}/>
                                         {errors.first_name && <p className="text-red-500">{errors.first_name.message}</p>}
                                     </div>
                                     <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="last_name">Last Name</Label>
+                                        <Label className="font-semibold  text-[#282828]" htmlFor="last_name">Last Name</Label>
                                         <Input className='md:p-7' type="text" id="last_name" placeholder="Last-name" {...register("last_name")}/>
                                         {errors.last_name && <p className="text-red-500">{errors.last_name.message}</p>}
                                     </div>
                                     {/* <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="middle_name">Middle Name</Label>
+                                        <Label className="font-semibold  text-[#282828]" htmlFor="middle_name">Middle Name</Label>
                                         <Input className='md:p-7' type="text" id="middle_name" placeholder="Middle-name" {...register("middle_name")}/>
                                         {errors.middle_name && <p className="text-red-500">{errors.middle_name.message}</p>}
                                      </div> */}
                                     <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="phone_number">Phone Number</Label>
+                                        <Label className="font-semibold  text-[#282828]" htmlFor="phone_number">Phone Number</Label>
                                         <Input className='md:p-7' type="number" id="phone_number" placeholder="091*********" {...register("phone_number")}/>
                                         {errors.phone_number && <p className="text-red-500">{errors.phone_number.message}</p>}
                                     </div>
                                     <div className="md:my-4 justify-center w-[100%] mx-auto max-w-sm items-center gap-1.5">
-                                        <Label className="font-semibold" htmlFor="email">Email Address</Label>
+                                        <Label className="font-semibold  text-[#282828]" htmlFor="email">Email Address</Label>
                                         <Input className='md:p-7' type="email" id="email" placeholder="example@gmail.com" {...register("email")}/>
                                         {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                                     </div>
@@ -453,7 +453,7 @@ function system(props) {
                                                 {
                                                     seeAdmin.slice(0,6).map((adminslist, index) => (
                                                         <div className='md:mb-6 md:mt:4   mb-3' key={index}>
-                                                            <p className="m-0 font-semibold md:text-[16px]">{adminslist.username}</p>
+                                                            <p className="m-0 text-[#282828] font-semibold md:text-[16px]">{adminslist.username}</p>
                                                             <p className="m-0 text-[#282828] opacity-[0.4] md:text-[16px] text-[14px]">{adminslist.phoneNumber}</p>
                                                         </div>
                                                     ))

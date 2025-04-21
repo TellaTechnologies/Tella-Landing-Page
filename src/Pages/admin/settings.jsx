@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/adminLayout';
-import { ArrowRight, ArrowUp, Filter, RefreshCcw } from 'lucide-react';
+import { ArrowDownToLine, ArrowRight, ArrowUp, Filter, RefreshCcw } from 'lucide-react';
 import { data, Link } from 'react-router-dom';
 import MagnifyingGlass from '../../assets/image/magnifyinglass2.svg'
 import FrameThree from '../../assets/image/Frame3.svg'
@@ -16,6 +16,7 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import BlackListImg from '../../assets/image/blacklist.svg'
 import { Label } from "@/components/ui/label"
 import { Input } from '../../components/ui/input';
 import {Button} from '@/components/ui/button'
@@ -50,6 +51,7 @@ function settings() {
     const [updatedpassword, ResetPasswordval] = useState("")
     const [password, setPassword] = useState("");
     const [reset, setReset] = useState(false)
+    const [blockedSection, setBlockedSection] = useState(false)
     const [view, setView] = useState('admin'); // 'admin', 'user', 'transactions'
     const [num, setNum ]= useState(0)
     const token = localStorage.getItem("token")
@@ -74,7 +76,6 @@ function settings() {
     const [isTimerActive, setIsTimerActive] = useState(false);
     const [otp, setOtp] = useState('');
     const [select, setSelectedUser] = useState(null); // stores user info
-
     const {notifications, dismissNotification} = useNotifications()
     const {notify} = useNotifications()
 
@@ -293,6 +294,11 @@ finally {
     setLoading(false); // Ensure loading is turned off after success or error
 }
 } 
+
+const setBlockedCandidate = () => {
+    setView("")
+    setBlockedSection(true)
+}
 const VerifyOtp = async (e) => {
     e.preventDefault() 
         
@@ -361,7 +367,7 @@ const UpdatePassword = async (e) => {
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 md:flex  items-center justify-center w-[100%] h-[350px] md:h-[249px] border border-none rounded-3xl'>
                         <div className="md:w-[500px] md:p-5 p-4 md:h-[171px] border-2 rounded-md">
-                            <p className="m-0 md:text-[20px] text-[18px] font-semibold">User Accounts</p>
+                            <p className="m-0 md:text-[20px] text-[#282828] text-[18px] font-semibold">User Accounts</p>
                             <div>
                                 <p className="m-0 'text-[#282828] opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">View, edit and deactivate user accounts </p>
                             </div>
@@ -375,7 +381,7 @@ const UpdatePassword = async (e) => {
                             </Link>
                         </div>
                         <div className="md:w-[500px] md:mt-0 mt-4 md:p-5 p-4  md:h-[171px] border-2 rounded-md">
-                            <p className="m-0  md:text-[20px] text-[18px] font-semibold">Assign Sales Officer</p>
+                            <p className="m-0  md:text-[20px] text-[#282828] text-[18px] font-semibold">Assign Sales Officer</p>
                             <div>
                                 <p className="m-0 'text-[#282828]  opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">Assign sales officers to Agents</p>
                             </div>
@@ -410,7 +416,7 @@ const UpdatePassword = async (e) => {
                     </div>
                     <div className='bg-white gap-4 md:p-5 p-4 md:flex flex-wrap items-center lg:justify-start justify-center  w-[100%] h-[500px] md:h-[425px] border border-none rounded-3xl'>
                         <div className="md:w-[500px] md:max-w-[400px] md:mt-0 mt-4 md:p-5 p-4  md:h-[171px] border-2 rounded-md">
-                            <p className="m-0  md:text-[20px] text-[18px] font-semibold">Platform Security</p>
+                            <p className="m-0  md:text-[20px] text-[#282828] text-[18px] font-semibold">Platform Security</p>
                             <div>
                                 <p className="m-0 'text-[#282828]  opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">Configure 2FA and password policies </p>
                             </div>
@@ -424,7 +430,7 @@ const UpdatePassword = async (e) => {
                             </Link>
                         </div>
                         <div className="lg:w-[500px] md:mt-0 mt-4 md:p-5 p-4  md:h-[171px] border-2 rounded-md">
-                            <p className="m-0  md:text-[20px] text-[18px] font-semibold">Activity logs</p>
+                            <p className="m-0  md:text-[20px] text-[#282828] text-[18px] font-semibold">Activity logs</p>
                             <div>
                                 <p className="m-0 'text-[#282828]  opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">View system activity and login attempts </p>
                             </div>
@@ -438,11 +444,11 @@ const UpdatePassword = async (e) => {
                             </Link>
                         </div>
                         <div className="md:w-[500px] md:mt-0 mt-4 md:p-5 p-4  md:h-[171px] border-2 rounded-md">
-                            <p className="m-0  md:text-[20px] text-[18px] font-semibold">Blacklist Management</p>
+                            <p className="m-0  text-[#282828] md:text-[20px] text-[18px] font-semibold">Blacklist Management</p>
                             <div>
                                 <p className="m-0 'text-[#282828]  opacity-[0.7] md:text-[12px] lg:text-[16px] text-[14px]">Block and manage fraudulent accounts </p>
                             </div>
-                            <Link className='flex md:mt-4 mt-5 items-center gap-2'>
+                            <Link onClick={(e) => setBlockedCandidate(e)} className='flex md:mt-4 mt-5 items-center gap-2'>
                                 <div>
                                     <p className="text-[#2097CF] m-0">Manage Blacklists</p>
                                 </div>
@@ -1149,6 +1155,49 @@ const UpdatePassword = async (e) => {
                          </div>
                     </div>
                  </AdminLayout>
+            }
+            {
+                blockedSection &&
+                <AdminLayout title={"Security Settings"}>
+                    <div className='bg-white md:p-5 lg:w-[100%] h-[400px] p-4 lg:h-[556px] md:h-[400px]'>
+                        <div className='flex items-center justify-between'>
+                            <div>
+                                <p className="m-0 font-semibold md:text-[16px[ lg:text-[18px] text-[17px]">Blocked Accounts</p>
+                            </div>
+                            <div className='flex items-center gap-5 justify-between'>
+                                <Button className="flex items-center justify-center  bg-[#2097CF]">
+                                    <div>
+                                        <ArrowDownToLine/>
+                                    </div>
+                                    <div>
+                                        <p className="m-0 text-white">Export PDF</p>
+                                    </div>
+                                </Button>   
+                                <div className="border rounded-md gap-2 sm:gap-3 justify-center flex items-center px-2 py-1 lg:py-2 bg-white">
+                                    <div><p className='m-0 text-[#282828]'>+</p></div>
+                                    <div><p className='m-0 flex gap-1 text-[#282828]'><span className='m-0 sm:flex hidden'>Add to</span> blacklist</p></div>
+                                </div>                                                               
+                            </div>
+
+                        </div>
+                        <div className="border md:p-4 mt-4 p-3 rounded-[8px]">
+                            <div className='flex items-center justify-between'>
+                                <div className='flex items-center md:gap-1 lg:gap-2 gap-3'> 
+                                    <div>
+                                        <img src={BlackListImg} alt="" />
+                                    </div>
+                                    <div>
+                                        <p className='text-[#282828]'>09165448290</p>
+                                        <p className='text-[#6B7280]'>Blocked on Jan 10, 2025</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-[#FF0000]">Unblock</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </AdminLayout>
             }
         </div>
     );
